@@ -1,202 +1,94 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Elite Sports Leagues</title>
-  <meta name="description" content="The home of Elite Sports Leagues." />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elite Sports Leagues • Step Into Elite</title><link rel="icon" href="/elite-crest.svg">
+<meta name="description" content="One identity. Many sports. Build a legacy across Elite Sports Leagues.">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <a class="brand" href="#home" aria-label="Elite Sports Leagues home">
-        <div class="brand-mark">ESL</div>
-        <div>
-          <strong>ELITE SPORTS LEAGUES</strong>
-          <span>Your Career • Your League • Your Legacy</span>
-        </div>
-      </a>
-
-      <button id="menuBtn" class="menu-btn" aria-label="Toggle navigation">☰</button>
-
-      <nav id="mainNav" class="nav">
-        <a href="#home">Home</a>
-        <a href="#sports">Sports</a>
-        <a href="#careers">My Careers</a>
-        <a href="#community">Community</a>
-        <a href="#legacy">Legacy</a>
-        <a href="#shop">Shop</a>
-      </nav>
-
-      <div class="account">
-        <button class="icon-btn" title="Notifications">🔔</button>
-        <button class="profile-btn" id="profileBtn">
-          <span class="avatar">TM</span>
-          <span class="profile-copy">
-            <b data-user-name>T-Money</b>
-            <small id="profileRole">Elite Member</small>
-          </span>
-        </button>
-      </div>
-    <button id="logoutBtn" class="logout-floating">Log Out</button>
-    </header>
-
-    <main>
-      <section id="home" class="hero">
-        <div class="hero-copy">
-          <div class="eyebrow">THE ELITE SPORTS UNIVERSE</div>
-          <h1>ONE ACCOUNT.<br/>EVERY CAREER.</h1>
-          <p>
-            Build your legacy across baseball, basketball, football, hockey,
-            soccer, racing, combat sports, golf, tennis and more.
-          </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#sports">Explore Sports</a>
-            <a class="btn secondary" href="#legacy">View Legacy</a>
-          </div>
-        </div>
-
-        <div class="hero-panel">
-          <div class="panel-kicker">WELCOME BACK</div>
-          <h2 data-user-name>T-Money</h2>
-          <div class="stat-row">
-            <div><strong>2</strong><span>Active Careers</span></div>
-            <div><strong>5</strong><span>Seasons</span></div>
-            <div><strong>2</strong><span>Titles</span></div>
-            <div><strong>1,840</strong><span>Legacy</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="sports" class="section">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">SPORTS</span>
-            <h2>Choose Your Arena</h2>
-          </div>
-          <button class="ghost-btn" id="toggleDev">Show Development Status</button>
-        </div>
-        <div id="sportsGrid" class="sports-grid"></div>
-      </section>
-
-      <section id="careers" class="section split-section">
-        <div>
-          <div class="section-heading compact">
-            <div>
-              <span class="eyebrow">MY CAREERS</span>
-              <h2>Your Active Careers</h2>
-            </div>
-          </div>
-          <div id="careersList" class="career-list"></div>
-        </div>
-
-        <aside id="legacy" class="legacy-card">
-          <span class="eyebrow">ELITE LEGACY</span>
-          <h2 data-legacy-level>Level 7</h2>
-          <div class="legacy-score" data-legacy-points>1,840</div>
-          <div class="progress"><span data-progress style="width:72%"></span></div>
-          <small data-next-level>660 points to Level 8</small>
-
-          <div class="legacy-grid">
-            <div><b data-championships>2</b><span>Championships</span></div>
-            <div><b data-major-awards>4</b><span>Major Awards</span></div>
-            <div><b data-seasons-played>5</b><span>Seasons Played</span></div>
-            <div><b data-sports-entered>2</b><span>Sports Entered</span></div>
-          </div>
-          <button class="btn secondary full">Open Legacy Profile</button>
-        </aside>
-      </section>
-
-      <section class="section">
-        <div class="section-heading">
-          <div>
-            <span class="eyebrow">AROUND THE LEAGUES</span>
-            <h2>Elite Sports News</h2>
-          </div>
-        </div>
-        <div id="newsGrid" class="news-grid"></div>
-      </section>
-
-      <section id="community" class="section cta">
-        <div>
-          <span class="eyebrow">ELITE COMMUNITY</span>
-          <h2>One community across every sport.</h2>
-          <p>Friends, messages, profiles, achievements, news and league history all live under one Elite account.</p>
-        </div>
-        <button class="btn primary">Enter Community</button>
-      </section>
-
-      <section id="shop" class="section muted-section">
-        <div>
-          <span class="eyebrow">ELITE SHOP</span>
-          <h2>League and team gear will live here.</h2>
-          <p>A separate, optional storefront for Elite Sports and franchise merchandise.</p>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div>© 2026 Elite Sports Leagues</div>
-      <div id="systemStatus" class="system-status">Connecting Elite Core…</div><div class="footer-links">
-        <a href="#">Community Rules</a>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-      </div>
-    </footer>
+<header class="topbar">
+  <div class="shell nav">
+    <a class="brand" href="/"><img class="brand-logo" src="/elite-sports-logo.svg" alt="Elite Sports Leagues"></a>
+    <nav class="navlinks">
+      <a href="#sports">Sports</a><a href="#legacy">Legacy</a><a href="#community">Community</a>
+      <a class="keep" href="/login.html">Sign in</a>
+      <a class="btn keep" href="/register.html">Create account</a>
+    </nav>
   </div>
+</header>
 
-  <script src="app.js"></script>
-
-  <div id="authOverlay" class="auth-overlay">
-    <div class="auth-card">
-      <div class="brand auth-brand">
-        <div class="brand-mark">ESL</div>
-        <div>
-          <strong>ELITE SPORTS LEAGUES</strong>
-          <span>One account for every sport</span>
-        </div>
-      </div>
-
-      <div class="auth-tabs">
-        <button id="loginTab" class="auth-tab active">Log In</button>
-        <button id="registerTab" class="auth-tab">Create Account</button>
-      </div>
-
-      <form id="loginForm" class="auth-form">
-        <label>Username or Email
-          <input id="loginIdentity" autocomplete="username" required />
-        </label>
-        <label>Password
-          <input id="loginPassword" type="password" autocomplete="current-password" required />
-        </label>
-        <button class="btn primary full" type="submit">Enter Elite Sports</button>
-        <small><a href="/reset-password.html">Forgot password?</a></small>
-        <small class="demo-note">Demo: t-money / EliteDemo123!</small>
-      </form>
-
-      <form id="registerForm" class="auth-form hidden">
-        <label>Username
-          <input id="regUsername" minlength="3" maxlength="24" required />
-        </label>
-        <label>Display Name
-          <input id="regDisplayName" minlength="2" maxlength="50" required />
-        </label>
-        <label>Email
-          <input id="regEmail" type="email" required />
-        </label>
-        <label>Password
-          <input id="regPassword" type="password" minlength="10" required />
-        </label>
-        <label class="legal-check"><input id="acceptTerms" type="checkbox" required /> I accept the Terms of Service</label>
-        <label class="legal-check"><input id="acceptPrivacy" type="checkbox" required /> I accept the Privacy Policy</label>
-        <label class="legal-check"><input id="acceptCommunity" type="checkbox" required /> I accept the Community Rules</label>
-        <button class="btn primary full" type="submit">Create Elite Account</button>
-      </form>
-
-      <div id="authMessage" class="auth-message"></div>
+<main>
+<section class="hero">
+  <div class="shell">
+    <img class="hero-brand" src="/elite-sports-logo.svg" alt="Elite Sports Leagues">
+    <div class="eyebrow">The connected world of Elite competition</div>
+    <h1>Step into <span class="gold">Elite.</span><br>Build your legacy.</h1>
+    <p>One permanent identity. Distinct sports worlds. Careers that matter, rivalries that grow, records that survive, and championships that become part of your history.</p>
+    <div class="hero-actions">
+      <a class="btn" href="/register.html">Create Elite Identity</a>
+      <a class="btn secondary" href="/login.html">Enter the Hub</a>
+      <a class="btn secondary" href="#sports">Explore Sports</a>
+    </div>
+    <div class="statstrip">
+      <div class="stat"><b>ONE</b><span>Elite identity</span></div>
+      <div class="stat"><b>9+</b><span>Distinct sport worlds</span></div>
+      <div class="stat"><b>FOREVER</b><span>Career history preserved</span></div>
+      <div class="stat"><b>ZERO</b><span>Pay-to-win advantage</span></div>
     </div>
   </div>
+</section>
+<div class="broadcast-ticker">
+ <div class="ticker-row"><div class="ticker-label">ELITE NETWORK</div>
+ <div class="ticker-track">
+   <span><b>⚾ BASEBALL</b> • Elite Baseball League is the first live sport world</span>
+   <span><b>🏎 RACING</b> • Driver careers and race weekends are in development</span>
+   <span><b>⛳ GOLF</b> • World ranking and course-fit systems are in development</span>
+   <span><b>🏆 LEGACY</b> • Championships and records follow your Elite identity forever</span>
+   <span><b>⚾ BASEBALL</b> • Elite Baseball League is the first live sport world</span>
+   <span><b>🏎 RACING</b> • Driver careers and race weekends are in development</span>
+ </div></div>
+</div>
 
+<section class="section" id="sports"><div class="shell">
+  <div class="section-head"><div><div class="eyebrow">Choose your arena</div><h2>Elite Sports</h2></div><p>Every sport keeps its own identity.</p></div>
+  <div class="grid">
+    <a class="card sport-card world-card world-baseball" href="https://elite-baseball.com">
+      <div class="sport-icon">⚾</div><h3>Elite Baseball League</h3><p>Build a career, join a franchise, chase championships.</p><span class="tag live">LIVE</span>
+      <div class="sport-footer"><span>Enter EBL</span><span class="arrow">→</span></div>
+    </a>
+    <div class="card sport-card world-card world-racing"><div class="sport-icon">🏎️</div><h3>Elite Stock Car Racing</h3><p>Driver careers, garages, race weekends and championships.</p><span class="tag">ALPHA</span><div class="sport-footer"><span>Coming next</span><span class="arrow">→</span></div></div>
+    <div class="card sport-card world-card world-golf"><div class="sport-icon">⛳</div><h3>Elite Golf League</h3><p>Tours, rankings, course fit and career-defining majors.</p><span class="tag">IN DEVELOPMENT</span><div class="sport-footer"><span>Tour preview</span><span class="arrow">→</span></div></div>
+    <div class="card sport-card world-card world-basketball"><div class="sport-icon">🏀</div><h3>Elite Basketball</h3><p>Player careers, teams, seasons, awards and rivalries.</p><span class="tag">IN DEVELOPMENT</span></div>
+    <div class="card sport-card world-card world-football"><div class="sport-icon">🏈</div><h3>Elite Football</h3><p>Build a football legacy from rookie season onward.</p><span class="tag">IN DEVELOPMENT</span></div>
+    <div class="card sport-card world-card world-mma"><div class="sport-icon">🥊</div><h3>Elite MMA</h3><p>Gyms, rankings, fight cards, records and title runs.</p><span class="tag">IN DEVELOPMENT</span></div>
+  </div>
+</div></section>
+
+<section class="section section-rail" id="legacy"><div class="shell two-col">
+  <div class="card legacy-banner">
+    <div class="eyebrow">Career Passport</div><h2>Your entire sporting life, one profile.</h2>
+    <p class="muted">Championships, awards, records, debuts, retirements and Hall of Fame honors stay with your Elite identity forever.</p>
+    <div class="feed-item"><div class="dot"></div><div><b>Baseball career</b><p>Player, coach, franchise and season history.</p></div></div>
+    <div class="feed-item"><div class="dot"></div><div><b>Racing career</b><p>Driver number, team, starts, wins and titles.</p></div></div>
+    <div class="feed-item"><div class="dot"></div><div><b>Cross-sport legacy</b><p>Recognition without gameplay stat advantages.</p></div></div>
+  </div>
+  <div class="card">
+    <div class="eyebrow">Trophy Room</div><h2>What you earned stays yours.</h2>
+    <div class="trophy"><div class="icon">🏆</div><div><b>Championships</b><div class="muted">Permanent career display</div></div></div>
+    <div class="trophy"><div class="icon">⭐</div><div><b>Major awards</b><div class="muted">Across every Elite sport</div></div></div>
+    <div class="trophy"><div class="icon">📜</div><div><b>Records & milestones</b><div class="muted">Preserved in history</div></div></div>
+  </div>
+</div></section>
+
+<section class="section" id="community"><div class="shell">
+  <div class="card">
+    <div class="eyebrow">One community</div><h2>Friends travel with you. Sports stay distinct.</h2>
+    <p class="muted">Your Elite friends, profile, messages and notifications connect the network. Team chats, race paddocks, clubhouses and sport-specific communities remain inside their own worlds.</p>
+  </div>
+</div></section>
+</main>
+
+<footer class="footer"><div class="shell">© 2026 Elite Sports Leagues • One identity. Many sports. One legacy.</div></footer>
 </body>
 </html>

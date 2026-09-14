@@ -17,12 +17,14 @@ import urllib.parse
 ROOT = Path(__file__).resolve().parent
 DB_PATH = ROOT / "elite_core.db"
 HOST = "0.0.0.0"
-PORT = 8080
+PORT = int(os.environ.get("PORT","8080"))
 SESSION_COOKIE = "elite_session"
 SESSION_TTL_SECONDS = 60 * 60 * 24 * 30
 GATEWAY_TTL_SECONDS = 60
-GATEWAY_SECRET = "dev-only-change-me-before-production"
+GATEWAY_SECRET = os.environ.get("ELITE_GATEWAY_SECRET","dev-only-change-me-before-production")
 APP_ENV = os.environ.get("ELITE_ENV","development").lower()
+if APP_ENV=="production" and GATEWAY_SECRET=="dev-only-change-me-before-production":
+    raise RuntimeError("ELITE_GATEWAY_SECRET is required in production")
 VERIFY_TTL_SECONDS = 60 * 60 * 24
 RESET_TTL_SECONDS = 60 * 30
 PUBLIC_REGISTRATION = os.environ.get("ELITE_PUBLIC_REGISTRATION","1") == "1"

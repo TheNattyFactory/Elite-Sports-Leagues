@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create account • Elite Sports Leagues</title><link rel="stylesheet" href="/styles.css"><link rel="icon" href="/elite-crest.svg"></head>
+<body><main class="auth-wrap"><section class="auth-card">
+<a class="brand" href="/"><img class="brand-logo" src="/elite-sports-logo.svg" alt="Elite Sports Leagues"></a>
+<h1>Start your legacy.</h1><p class="muted">Your account connects every Elite sport.</p>
+<form id="regForm">
+<div class="field"><label>Username</label><input id="username" autocomplete="username" required></div>
+<div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
+<div class="field"><label>Password</label><input id="password" type="password" autocomplete="new-password" minlength="8" required></div>
+<label class="muted" style="display:flex;gap:9px;font-size:13px"><input id="legal" type="checkbox" required> I accept the Terms, Privacy Policy and Community Rules.</label>
+<button class="btn" style="width:100%;margin-top:16px">Create Elite account</button><div id="msg" class="message"></div>
+</form>
+<p class="muted" style="text-align:center">Already Elite? <a href="/login.html" style="color:#ffd77a">Sign in</a></p>
+</section></main>
+<script>
+const f=document.getElementById('regForm'),msg=document.getElementById('msg');
+f.onsubmit=async e=>{
+ e.preventDefault();msg.textContent='Creating account…';
+ const body={username:username.value,email:email.value,password:password.value,accept_terms:true,accept_privacy:true,accept_community_rules:true};
+ try{
+  const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json(); if(!r.ok) throw new Error(j.error||'REGISTER_FAILED');
+  location.href=j.email_verified?'/dashboard.html':'/verify.html';
+ }catch(err){msg.textContent=String(err.message||err).replaceAll('_',' ')}
+}
+</script></body></html>

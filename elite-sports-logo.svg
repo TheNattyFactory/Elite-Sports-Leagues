@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 220" role="img" aria-label="Elite Sports Leagues">
+<defs>
+  <linearGradient id="gold" x1="0" x2="1"><stop stop-color="#fff0a8"/><stop offset=".42" stop-color="#f0b84b"/><stop offset="1" stop-color="#9f6418"/></linearGradient>
+  <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#20324c"/><stop offset="1" stop-color="#09111d"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g transform="translate(10 10)">
+  <path d="M100 0 188 30 176 128q-17 48-76 72-59-24-76-72L12 30Z" fill="url(#steel)" stroke="url(#gold)" stroke-width="6"/>
+  <path d="M46 53h108v25H76v20h66v23H76v22h80v25H46Z" fill="url(#gold)"/>
+  <path d="m100 20 10 20 22 3-16 16 4 22-20-10-20 10 4-22-16-16 22-3Z" fill="#f7cf6c" opacity=".9" filter="url(#glow)"/>
+  <text x="220" y="95" fill="white" font-size="68" font-family="Arial Black,Arial,sans-serif" font-weight="900" letter-spacing="3">ELITE SPORTS</text>
+  <text x="224" y="151" fill="url(#gold)" font-size="42" font-family="Arial,Helvetica,sans-serif" font-weight="800" letter-spacing="12">LEAGUES</text>
+  <path d="M225 174h555" stroke="#2f496a" stroke-width="2"/>
+  <text x="225" y="202" fill="#8fa3bd" font-size="17" font-family="Arial,Helvetica,sans-serif" letter-spacing="5">ONE IDENTITY • MANY SPORTS • ONE LEGACY</text>
+</g></svg>
