@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verify Email | Elite Sports</title><link rel="stylesheet" href="styles.css"></head>
+<body><main style="max-width:650px;margin:60px auto;padding:24px">
+<span class="eyebrow">ELITE ACCOUNT</span><h1>Verify your email</h1>
+<p>Enter the verification token from your Elite Sports email. In development, you can retrieve it from the local email outbox.</p>
+<label>Verification token<input id="token" style="width:100%;padding:12px;margin:8px 0 14px"></label>
+<button class="btn primary" onclick="verify()">Verify Account</button>
+<button class="btn secondary" onclick="resend()">Resend</button>
+<p id="msg"></p><div id="dev"></div>
+<script>function getCsrf(){const m=document.cookie.match(/(?:^|;\\s*)elite_csrf=([^;]+)/);return m?decodeURIComponent(m[1]):''}\n
+async function post(path,body){const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json",...(getCsrf()?{"X-CSRF-Token":getCsrf()}:{})},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.error||"Request failed");return d}
+async function verify(){try{await post("/api/auth/verify-email",{token:token.value});msg.textContent="Email verified. Your Elite account is ready.";setTimeout(()=>location.href="/dashboard.html",500)}catch(e){msg.textContent=e.message}}
+async function resend(){try{const d=await post("/api/auth/resend-verification",{});msg.textContent="Verification sent.";if(d.dev_verification_token){token.value=d.dev_verification_token;dev.textContent="Development token loaded automatically."}}catch(e){msg.textContent=e.message}}
+(async()=>{try{const r=await fetch("/api/dev/email-outbox");if(r.ok){const d=await r.json();const x=d.messages.find(m=>m.email_type==="VERIFY_EMAIL");if(x){token.value=x.token;dev.textContent="Development mode: latest verification token loaded.";}}}catch{}})();
+</script></main></body></html>

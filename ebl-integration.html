@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EBL Integration Guide</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+body{padding:28px}
+main{max-width:900px;margin:auto}
+section{margin:24px 0;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+pre{white-space:pre-wrap;background:#07111d;border:1px solid var(--line);padding:16px;border-radius:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<span class="eyebrow">ELITE BASEBALL LEAGUE</span>
+<h1>Elite Core Integration Guide</h1>
+
+<section>
+<h2>1. Link an existing EBL account</h2>
+<pre>POST /api/integrations/baseball/link
+
+{
+  "external_user_id": "CURRENT_EBL_USER_ID",
+  "external_username": "CURRENT_EBL_USERNAME",
+  "role": "PLAYER"
+}</pre>
+</section>
+
+<section>
+<h2>2. Hub sends the player to Baseball</h2>
+<pre>GET /api/gateway/enter/baseball</pre>
+<p>The Hub creates a one-time token and redirects to the EBL entry URL.</p>
+</section>
+
+<section>
+<h2>3. EBL consumes the token</h2>
+<pre>POST ELITE_CORE_URL/api/gateway/consume
+
+{
+  "sport": "baseball",
+  "token": elite_token
+}</pre>
+</section>
+
+<section>
+<h2>4. EBL restores its own session</h2>
+<pre>external_account.external_user_id
+→ load existing EBL user
+→ create normal EBL session
+→ redirect to EBL home</pre>
+</section>
+
+<section>
+<h2>Ownership boundary</h2>
+<pre>Elite Core:
+identity / Hub / cross-sport services
+
+EBL:
+players / coaches / commissioner auth
+franchises / rosters / games / stats
+contracts / standings / awards</pre>
+</section>
+
+<a class="btn secondary" href="/">← Back to Hub</a>
+</main>
+</body>
+</html>

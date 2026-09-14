@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elite Sports Hub</title><link rel="stylesheet" href="styles.css">
+<style>
+body{padding:20px}.wrap{max-width:1250px;margin:auto}.top{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}.grid{display:grid;grid-template-columns:1.45fr .75fr;gap:18px}.card{padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--panel);margin-bottom:18px}.sports{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.sport{padding:16px;border:1px solid var(--line);border-radius:14px;background:#081522}.sport .icon{font-size:1.8rem}.career,.feed,.notice,.honor{padding:12px 0;border-top:1px solid var(--line)}.numbers{display:flex;gap:10px;flex-wrap:wrap}.number{padding:10px 14px;border:1px solid var(--line);border-radius:12px}.ticker{overflow:hidden;white-space:nowrap;padding:10px;border:1px solid var(--line);border-radius:12px;margin-bottom:18px}.ticker span{display:inline-block;padding-right:48px}.muted{opacity:.72}@media(max-width:850px){.grid{grid-template-columns:1fr}.top{align-items:start;flex-direction:column}}
+</style></head><body><div class="wrap">
+<div id="ticker" class="ticker">ELITE SPORTS • Loading the universe...</div>
+<header class="top"><div><span class="eyebrow">ELITE SPORTS LEAGUES</span><h1 id="welcome">Welcome back</h1><p>Shared identity. Separate worlds. Connected legacy.</p></div><div class="numbers" id="numbers"></div></header>
+<div class="grid"><main>
+<section class="card"><h2>Your Sports</h2><div id="sports" class="sports"></div></section>
+<section class="card"><h2>Continue Your Careers</h2><div id="careers"></div></section>
+<section class="card"><h2>Around Elite Sports</h2><div id="news"></div></section>
+</main><aside>
+<section class="card"><h2>Notifications</h2><div id="notifications"></div><p><a href="/community.html">Open Community →</a></p></section>
+<section class="card"><h2>Trophy Case</h2><div id="honors"></div><p><a href="/passport.html">Career Passport →</a></p></section>
+<section class="card"><h2>Elite Activity</h2><div id="activity"></div></section>
+<section class="card"><h2>Quick Links</h2><p><a href="/profile.html?u=t-money">Public Profile</a></p><p><a href="/community.html">Friends & Messages</a></p><p><a href="/">Classic Hub</a></p></section>
+</aside></div></div>
+<script>
+async function load(){
+ try{
+  const r=await fetch("/api/dashboard"); if(r.status===401){location.href="/";return}
+  const d=await r.json();
+  welcome.textContent=`Welcome back, ${d.me.display_name}`;
+  numbers.innerHTML=`<div class="number"><b>${d.me.legacy_points}</b><br><span class="muted">Legacy</span></div><div class="number"><b>${d.counts.active_careers}</b><br><span class="muted">Careers</span></div><div class="number"><b>${d.counts.friends}</b><br><span class="muted">Friends</span></div><div class="number"><b>${d.counts.unread_notifications}</b><br><span class="muted">Alerts</span></div>`;
+  sports.innerHTML=d.sports.map(s=>`<div class="sport"><div class="icon">${s.icon||"🏆"}</div><b>${s.name}</b><div class="muted">${s.membership_role?`Your role: ${s.membership_role}`:s.status}</div>${["LIVE","ALPHA"].includes(s.status)?`<button class="btn" onclick="enterSport('${s.slug}')">Enter</button>`:`<span class="muted">Coming Soon</span>`}</div>`).join("");
+  careers.innerHTML=d.careers.map(c=>`<div class="career"><b>${c.icon||""} ${c.display_name}</b><div>${c.sport_name} • ${c.team_name||"Independent"} • ${c.role_name||""}</div><span class="muted">${c.season_label||""} • ${c.status}</span></div>`).join("")||"<p>No careers yet.</p>";
+  notifications.innerHTML=d.notifications.map(n=>`<div class="notice"><b>${n.title}</b><div>${n.body||""}</div></div>`).join("")||"<p>You're all caught up.</p>";
+  honors.innerHTML=d.honors.map(h=>`<div class="honor">${h.is_major?"🏆":"⭐"} <b>${h.title}</b><div class="muted">${h.icon||""} ${h.sport_name}${h.season_label?` • ${h.season_label}`:""}</div></div>`).join("")||"<p>Your trophy case is waiting.</p>";
+  activity.innerHTML=d.activity.map(a=>`<div class="feed"><b>${a.icon||""} ${a.title}</b><div class="muted">${a.display_name}</div></div>`).join("")||"<p>No recent activity.</p>";
+  news.innerHTML=d.news.map(n=>`<div class="feed"><b>${n.icon||"🏆"} ${n.title}</b><div>${n.summary||""}</div></div>`).join("")||"<p>No stories yet.</p>";
+  const tickerItems=[...d.news.slice(0,4).map(n=>`${n.icon||"🏆"} ${n.title}`),...d.activity.slice(0,3).map(a=>`${a.icon||"🏆"} ${a.title}`)];
+  ticker.innerHTML=(tickerItems.length?tickerItems:["ELITE SPORTS • The next chapter starts here"]).map(x=>`<span>${x}</span>`).join("");
+ }catch(e){welcome.textContent="Elite Sports Hub unavailable"}
+}
+async function enterSport(slug){
+ const r=await fetch(`/api/gateway/enter/${slug}`); const d=await r.json();
+ if(r.ok&&d.entry_url) location.href=d.entry_url; else alert(d.error||"Sport unavailable");
+}
+load();
+</script></body></html>

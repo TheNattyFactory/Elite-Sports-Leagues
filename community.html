@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elite Community</title><link rel="stylesheet" href="styles.css">
+<style>
+body{padding:24px}main{max-width:1100px;margin:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--panel);margin-bottom:18px}.item{padding:12px 0;border-top:1px solid var(--line)}input,textarea{width:100%;box-sizing:border-box;margin:6px 0 10px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#081522;color:inherit}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style></head><body><main>
+<span class="eyebrow">ELITE SPORTS LEAGUES</span><h1>Community</h1>
+<p>One community identity across every Elite sport.</p>
+<div class="grid">
+<section>
+<div class="card"><h2>Friends</h2><div id="friends">Loading...</div>
+<h3>Add Friend</h3><input id="friendUser" placeholder="Elite username"><button class="btn" onclick="addFriend()">Send Request</button></div>
+<div class="card"><h2>Direct Message</h2><input id="dmUser" placeholder="Elite username"><textarea id="dmText" placeholder="Message"></textarea><button class="btn" onclick="sendDM()">Send</button></div>
+</section>
+<section>
+<div class="card"><h2>Notifications</h2><div id="notifications">Loading...</div></div>
+<div class="card"><h2>Conversations</h2><div id="conversations">Loading...</div></div>
+</section></div>
+<p><a class="btn secondary" href="/">← Elite Sports Hub</a></p>
+</main><script>function getCsrf(){const m=document.cookie.match(/(?:^|;\\s*)elite_csrf=([^;]+)/);return m?decodeURIComponent(m[1]):''}\n
+async function api(path,opts={}){const r=await fetch(path,{headers:{"Content-Type":"application/json",...(opts.headers||{})},...opts});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Request failed");return d}
+async function load(){
+ try{
+  const [f,n,c]=await Promise.all([api("/api/community/friends"),api("/api/community/notifications"),api("/api/community/conversations")]);
+  friends.innerHTML=f.friends.map(x=>`<div class="item"><b>@${x.username}</b> • ${x.status} ${x.status==="PENDING"?`• ${x.direction}`:""}</div>`).join("")||"<p>No connections yet.</p>";
+  notifications.innerHTML=n.notifications.map(x=>`<div class="item"><b>${x.title}</b><div>${x.body||""}</div></div>`).join("")||"<p>You're all caught up.</p>";
+  conversations.innerHTML=c.conversations.map(x=>`<div class="item"><b>${x.title||"Direct Message"}</b><div>${x.last_message||"No messages yet."}</div></div>`).join("")||"<p>No conversations yet.</p>";
+ }catch(e){document.body.dataset.error=e.message}
+}
+async function addFriend(){try{await api("/api/community/friend-request",{method:"POST",body:JSON.stringify({username:friendUser.value})});friendUser.value="";load()}catch(e){alert(e.message)}}
+async function sendDM(){try{await api("/api/community/dm/start",{method:"POST",body:JSON.stringify({username:dmUser.value,message:dmText.value})});dmText.value="";load()}catch(e){alert(e.message)}}
+load();
+</script></body></html>

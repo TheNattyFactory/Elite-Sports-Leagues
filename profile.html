@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elite Public Profile</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+body{padding:24px}
+main{max-width:1100px;margin:auto}
+.hero{padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--panel);margin-bottom:20px}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+.card{padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.career{padding:14px 0;border-top:1px solid var(--line)}
+.honor,.activity{padding:12px 0;border-top:1px solid var(--line)}
+.tag{display:inline-block;padding:5px 9px;border:1px solid var(--line);border-radius:999px;font-size:.75rem}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.stat{padding:7px 9px;border-radius:9px;background:#081522;font-size:.8rem}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<div id="hero" class="hero">Loading Elite profile...</div>
+<div class="grid">
+  <section class="card"><h2>Career Passport</h2><div id="careers"></div></section>
+  <section class="card"><h2>Trophy Room</h2><div id="honors"></div></section>
+</div>
+<section class="card" style="margin-top:20px"><h2>Elite History</h2><div id="activity"></div></section>
+<p><a class="btn secondary" href="/">← Elite Sports Hub</a></p>
+</main>
+<script>
+const params=new URLSearchParams(location.search);
+const username=params.get("u")||"t-money";
+(async()=>{
+  const hero=document.getElementById("hero");
+  try{
+    const r=await fetch(`/api/public/profile/${encodeURIComponent(username)}`);
+    const data=await r.json();
+    if(!r.ok){hero.textContent=data.error||"Profile unavailable";return}
+    const p=data.profile;
+    document.title=`${p.display_name} | Elite Sports`;
+    hero.innerHTML=`<span class="eyebrow">ELITE SPORTS PROFILE</span>
+      <h1>${p.display_name}</h1>
+      <p>@${p.username} • Legacy ${p.legacy_points}</p>
+      ${p.banner_label?`<span class="tag">${p.banner_label}</span>`:""}
+      ${p.bio?`<p>${p.bio}</p>`:""}`;
+
+    document.getElementById("careers").innerHTML=(data.passports||[]).map(c=>`
+      <div class="career">
+        <h3>${c.icon||""} ${c.sport_name}</h3>
+        <strong>${c.athlete_name}</strong>
+        <div>${c.organization_name||"Independent"} ${c.role_name?`• ${c.role_name}`:""}</div>
+        <div>${c.current_season||""} • ${c.career_status}</div>
+        <div class="stats">${(c.stats||[]).map(s=>`<span class="stat"><b>${s.stat_value}</b> ${s.stat_label}</span>`).join("")}</div>
+      </div>`).join("") || "<p>No careers yet.</p>";
+
+    document.getElementById("honors").innerHTML=(data.honors||[]).map(h=>`
+      <div class="honor">${h.is_major?"🏆":"⭐"} <strong>${h.title}</strong>
+      <div>${h.icon||""} ${h.sport_name}${h.season_label?` • ${h.season_label}`:""}</div></div>
+    `).join("") || "<p>No honors yet.</p>";
+
+    document.getElementById("activity").innerHTML=(data.activity||[]).map(a=>`
+      <div class="activity"><strong>${a.icon||""} ${a.title}</strong>
+      <div>${a.description||""}</div>
+      <small>${a.occurred_at}</small></div>`).join("") || "<p>No public activity yet.</p>";
+  }catch(e){hero.textContent="Profile unavailable."}
+})();
+</script>
+</body>
+</html>

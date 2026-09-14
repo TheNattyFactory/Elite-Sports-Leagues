@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Elite Sport Gateway Demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body{display:grid;place-items:center;min-height:100vh;padding:20px}
+    .gateway-demo{width:min(720px,100%);padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--panel)}
+    .gateway-demo pre{white-space:pre-wrap;background:#07111d;border:1px solid var(--line);padding:16px;border-radius:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="gateway-demo">
+    <span class="eyebrow">ELITE SPORT GATEWAY</span>
+    <h1>Secure Handoff Demo</h1>
+    <p id="status">Validating your Elite identity…</p>
+    <pre id="result"></pre>
+    <a class="btn secondary" href="/">← Back to Elite Sports Hub</a>
+  </main>
+<script>
+(async()=>{
+  const qs = new URLSearchParams(location.search);
+  const sport = qs.get("sport");
+  const token = qs.get("token");
+  const status = document.getElementById("status");
+  const result = document.getElementById("result");
+
+  try{
+    const r = await fetch("/api/gateway/consume",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({sport,token})
+    });
+
+    const data = await r.json();
+    if(!r.ok) throw new Error(data.error || "Gateway failed");
+
+    status.textContent =
+      `Identity accepted by ${data.sport.name}. No second login required.`;
+    result.textContent = JSON.stringify(data,null,2);
+  }catch(err){
+    status.textContent = "Gateway validation failed.";
+    result.textContent = String(err.message || err);
+  }
+})();
+</script>
+</body>
+</html>
