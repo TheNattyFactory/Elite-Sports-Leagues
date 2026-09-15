@@ -348,3 +348,19 @@ button:disabled{opacity:.55;cursor:not-allowed}
  .world-baseball .league-logo{height:165px;width:min(100%,300px)}
  .navlinks .btn.primary,.btn.primary{color:#07101a!important;font-weight:900}
 }
+
+/* V23 MOBILE NETWORK */
+@media(max-width:700px){
+.network-section{padding:34px 0 44px}.network-section .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.network-section .section-head h2{font-size:40px;line-height:1;margin:5px 0 0}.network-link{font-size:11px;white-space:nowrap}
+.network-grid{display:block!important}.lead-story{display:block!important;min-height:0;padding:22px 20px;margin-bottom:16px;border-radius:16px}
+.lead-story h3{font-size:29px;line-height:1.08;margin:13px 0}.lead-story p{font-size:16px;line-height:1.5;margin-bottom:18px}.lead-story .btn{width:100%;text-align:center;display:block}
+.score-stack{display:flex!important;gap:12px;overflow-x:auto;padding:2px 1px 10px;scroll-snap-type:x mandatory;scrollbar-width:none}.score-stack::-webkit-scrollbar{display:none}
+.score-card{display:grid!important;grid-template-columns:1fr auto!important;grid-template-areas:"state arrow" "title arrow";align-items:center;min-width:82%;padding:17px!important;border:1px solid #2b3d55!important;border-radius:14px!important;background:#0d1724!important;scroll-snap-align:start}
+.score-card .score-state{grid-area:state;justify-self:start;margin-bottom:10px}.score-card>div{grid-area:title}.score-card>div b{display:block!important;font-size:18px;line-height:1.15;margin-bottom:5px}
+.score-card>div small{display:block!important;font-size:13px;line-height:1.35;color:#8fa2ba}.score-card>span:last-child{grid-area:arrow;font-size:12px;font-weight:900;color:#e7b54d;margin-left:10px}
+.headline-strip{display:block!important;margin:18px 0 0!important;border:1px solid #293b53!important;border-radius:14px!important;overflow:hidden;background:#0b131e!important}
+.headline-strip>*{display:block!important;white-space:normal!important;padding:14px 16px!important;border-right:0!important;border-bottom:1px solid #24354b!important;font-size:14px!important;line-height:1.35}
+.headline-strip>*:last-child{border-bottom:0!important}.headline-strip>span{background:#e5ad3e!important;color:#07101a!important;font-size:11px!important;letter-spacing:.12em!important}
+}
+@media(max-width:390px){.network-section .section-head{align-items:flex-start;flex-direction:column}.score-card{min-width:88%}}
