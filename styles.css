@@ -326,3 +326,25 @@ body:after{
 .elite-notice b{color:#ffdf82}.elite-notice span{color:#aeb9c8;font-size:13px}.elite-notice .btn{grid-column:2;grid-row:1/3}
 button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:600px){.elite-notice{grid-template-columns:1fr}.elite-notice .btn{grid-column:1;grid-row:auto;margin-top:8px}.hub-actions .btn{flex:1;text-align:center}}
+
+/* V22 — ELITE NETWORK */
+.network-nav{border-bottom:1px solid #203047;background:#070d15;position:sticky;top:0;z-index:20}
+.network-nav-inner{height:44px;display:flex;align-items:center;gap:28px;overflow-x:auto;scrollbar-width:none}
+.network-nav a{font-size:12px;font-weight:900;letter-spacing:.1em;color:#8fa0b7;white-space:nowrap;text-decoration:none}
+.network-nav a:hover,.network-nav a.active{color:#ffd267}.network-nav a.active{border-bottom:2px solid #e8ad39;height:44px;display:flex;align-items:center}
+.network-section{border-top:1px solid #26364c;border-bottom:1px solid #26364c;background:linear-gradient(180deg,#07111e,#050a11)}
+.network-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.lead-story{min-height:310px;padding:34px;border:1px solid #26384f;border-radius:18px;background:radial-gradient(circle at 80% 20%,rgba(32,88,144,.25),transparent 42%),linear-gradient(135deg,#111d2c,#080d14)}
+.lead-story h3{font-size:clamp(30px,4vw,52px);line-height:1;margin:15px 0}.lead-story p{color:#aab7c8;max-width:600px;font-size:17px;line-height:1.55}
+.story-kicker,.network-link{font-size:11px;font-weight:900;letter-spacing:.16em;color:#e9b64f}.network-link{text-decoration:none}
+.score-stack{display:grid;gap:10px}.score-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:18px;border:1px solid #26384f;border-radius:14px;background:#0d1622}
+.score-card b,.score-card small{display:block}.score-card small{color:#7f91a9;margin-top:4px}.score-state{font-size:10px;font-weight:900;letter-spacing:.1em;padding:6px 8px;border-radius:6px;background:#192538;color:#9db0c9}.score-state.live{background:#123a2c;color:#79e0a7}
+.headline-strip{margin-top:16px;display:flex;gap:0;overflow-x:auto;border:1px solid #27374c;background:#0b131e}
+.headline-strip>*{padding:12px 16px;white-space:nowrap;border-right:1px solid #27374c;font-size:12px}.headline-strip>span{background:#e5ad3e;color:#07101a;font-weight:1000;letter-spacing:.1em}
+@media(max-width:700px){
+ .network-nav-inner{gap:22px}.network-grid{grid-template-columns:1fr}.lead-story{min-height:0;padding:24px 20px}.lead-story h3{font-size:34px}
+ .score-card{padding:14px}.headline-strip{margin-left:-20px;margin-right:-20px}
+ .sport-card{padding:22px 20px;min-height:0}.sport-card .league-logo{height:145px;max-width:280px;object-fit:contain;margin:0 auto 16px}
+ .world-baseball .league-logo{height:165px;width:min(100%,300px)}
+ .navlinks .btn.primary,.btn.primary{color:#07101a!important;font-weight:900}
+}
