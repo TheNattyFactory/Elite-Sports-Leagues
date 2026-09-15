@@ -364,3 +364,15 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .headline-strip>*:last-child{border-bottom:0!important}.headline-strip>span{background:#e5ad3e!important;color:#07101a!important;font-size:11px!important;letter-spacing:.12em!important}
 }
 @media(max-width:390px){.network-section .section-head{align-items:flex-start;flex-direction:column}.score-card{min-width:88%}}
+
+
+/* V25 — MY ELITE NETWORK DASHBOARD */
+.career-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.career-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#101b2a,#090f18);border-color:#2a3b52}
+.career-card:after{content:"ELITE";position:absolute;right:-8px;bottom:-24px;font-size:72px;font-weight:1000;letter-spacing:-.08em;color:rgba(255,255,255,.025)}
+.career-sport{font-size:11px;font-weight:1000;letter-spacing:.14em;color:#e9b64f;text-transform:uppercase}
+.career-card h3{font-size:25px;margin:10px 0 6px}.career-card p{color:var(--muted);margin:0 0 18px}
+.career-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#91a2b8;font-weight:800}
+.wire-tag{display:inline-block;margin-top:5px;color:#e9b64f;font-size:9px;font-weight:1000;letter-spacing:.12em}
+.dashboard .sport-card .tag{margin-top:14px;display:inline-block}
+@media(max-width:700px){.career-grid{grid-template-columns:1fr}.dashboard-hero{border-radius:18px;padding:22px 18px}.dashboard .section-head{align-items:flex-end}.dashboard .section-head h2{font-size:30px}}

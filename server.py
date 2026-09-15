@@ -493,76 +493,88 @@ def init_db():
             sort_order=excluded.sort_order
         """,(slug,name,short,status,icon,sort_order))
 
-    baseball_url=os.environ.get("ELITE_BASEBALL_URL","").strip()
-    if baseball_url:
-        c.execute("UPDATE sports SET base_url=? WHERE slug='baseball'",(baseball_url,))
+    # Sport destinations are configured independently so the hub never hardcodes a league deployment.
+    sport_urls = {
+        "baseball": os.environ.get("ELITE_BASEBALL_URL", "").strip(),
+        "racing": os.environ.get("ELITE_RACING_URL", "").strip(),
+        "basketball": os.environ.get("ELITE_BASKETBALL_URL", "").strip(),
+        "football": os.environ.get("ELITE_FOOTBALL_URL", "").strip(),
+        "hockey": os.environ.get("ELITE_HOCKEY_URL", "").strip(),
+        "soccer": os.environ.get("ELITE_SOCCER_URL", "").strip(),
+        "mma": os.environ.get("ELITE_MMA_URL", "").strip(),
+        "golf": os.environ.get("ELITE_GOLF_URL", "").strip(),
+        "tennis": os.environ.get("ELITE_TENNIS_URL", "").strip(),
+    }
+    for sport_slug, sport_url in sport_urls.items():
+        if sport_url:
+            c.execute("UPDATE sports SET base_url=? WHERE slug=?", (sport_url, sport_slug))
 
-    demo = c.execute("SELECT * FROM users WHERE username='t-money'").fetchone()
-    if not demo:
-        c.execute("""
-          INSERT INTO users(username,email,display_name,password_hash,legacy_points,email_verified)
-          VALUES(?,?,?,?,?,?)
-        """,("t-money","tmoney@example.com","T-Money",password_hash("EliteDemo123!"),1840,1))
-    elif not demo["password_hash"]:
-        c.execute("""
-          UPDATE users SET password_hash=?, email_verified=1
-          WHERE id=?
-        """,(password_hash("EliteDemo123!"),demo["id"]))
-
-    uid = c.execute("SELECT id FROM users WHERE username='t-money'").fetchone()["id"]
-    baseball = c.execute("SELECT id FROM sports WHERE slug='baseball'").fetchone()["id"]
-    racing = c.execute("SELECT id FROM sports WHERE slug='racing'").fetchone()["id"]
-
-    c.execute("INSERT OR IGNORE INTO user_sport_memberships(user_id,sport_id,role) VALUES(?,?,?)",(uid,baseball,"PLAYER"))
-    c.execute("INSERT OR IGNORE INTO user_sport_memberships(user_id,sport_id,role) VALUES(?,?,?)",(uid,racing,"PLAYER"))
-
-    if c.execute("SELECT COUNT(*) n FROM careers WHERE user_id=?",(uid,)).fetchone()["n"] == 0:
-        c.execute("""INSERT INTO careers(user_id,sport_id,external_career_id,display_name,team_name,role_name,season_label)
-                     VALUES(?,?,?,?,?,?,?)""",(uid,baseball,"ebl-player-1","Thomas Garner","Atlanta Firebirds","SS","Season 3"))
-        c.execute("""INSERT INTO careers(user_id,sport_id,external_career_id,display_name,team_name,role_name,season_label)
-                     VALUES(?,?,?,?,?,?,?)""",(uid,racing,"escr-driver-1","T. Garner","#28 • Garner Racing","Driver","Season 1"))
-
-    if c.execute("SELECT COUNT(*) n FROM legacy_events WHERE user_id=?",(uid,)).fetchone()["n"] == 0:
-        c.executemany("""INSERT INTO legacy_events(user_id,sport_id,event_type,title,points) VALUES(?,?,?,?,?)""",[
-            (uid,baseball,"CHAMPIONSHIP","Baseball Championship",500),
-            (uid,baseball,"MAJOR_AWARD","Season MVP",250),
-            (uid,baseball,"SEASON_COMPLETED","Completed Baseball Season",100),
-            (uid,baseball,"SEASON_COMPLETED","Completed Baseball Season",100),
-            (uid,baseball,"SEASON_COMPLETED","Completed Baseball Season",100),
-            (uid,racing,"WIN","First Career Racing Win",150),
-            (uid,racing,"SEASON_COMPLETED","Completed Racing Season",100),
-        ])
-
-
-    c.execute("""INSERT INTO profile_settings(user_id,bio,banner_label,featured_sport_slug)
-                 VALUES(?,?,?,?)
-                 ON CONFLICT(user_id) DO NOTHING""",
-              (uid,"Multi-sport Elite competitor building a legacy across the universe.",
-               "FOUNDING MEMBER","baseball"))
-
-    if c.execute("SELECT COUNT(*) n FROM activity_feed WHERE user_id=?",(uid,)).fetchone()["n"] == 0:
-        c.executemany("""INSERT INTO activity_feed(
-          user_id,sport_id,activity_type,title,description,external_ref,visibility,occurred_at
-        ) VALUES(?,?,?,?,?,?,?,?)""",[
-          (uid,baseball,"CHAMPIONSHIP","Won the EBL Championship",
-           "Captured a Baseball championship with the Atlanta Firebirds.",
-           "demo-ebl-title","PUBLIC","2026-08-30 20:00:00"),
-          (uid,racing,"CAREER_WIN","First Elite Stock Car victory",
-           "Earned the first career win in Elite Stock Car Racing.",
-           "demo-escr-win","PUBLIC","2026-09-08 19:30:00"),
-          (uid,baseball,"SEASON_MILESTONE","Completed another EBL season",
-           "Added another completed Baseball season to the Career Passport.",
-           "demo-ebl-season","PUBLIC","2026-09-02 18:00:00")
-        ])
-
-    if c.execute("SELECT COUNT(*) n FROM hub_news").fetchone()["n"] == 0:
-        basketball = c.execute("SELECT id FROM sports WHERE slug='basketball'").fetchone()["id"]
-        c.executemany("""INSERT INTO hub_news(sport_id,headline,summary,priority,is_featured) VALUES(?,?,?,?,?)""",[
-            (baseball,"Atlanta clinches division title","A late-season surge locks up the division and sets the stage for October.",10,1),
-            (racing,"Rookie earns first career victory","The newest Elite series produces its first breakout moment of the season.",9,1),
-            (basketball,"Basketball league foundation enters planning phase","Teams, careers, contracts and season structure are being designed now.",8,0),
-        ])
-
+    if os.environ.get("ELITE_SEED_DEMO","0") == "1":
+        demo = c.execute("SELECT * FROM users WHERE username='t-money'").fetchone()
+        if not demo:
+            c.execute("""
+              INSERT INTO users(username,email,display_name,password_hash,legacy_points,email_verified)
+              VALUES(?,?,?,?,?,?)
+            """,("t-money","tmoney@example.com","T-Money",password_hash("EliteDemo123!"),1840,1))
+        elif not demo["password_hash"]:
+            c.execute("""
+              UPDATE users SET password_hash=?, email_verified=1
+              WHERE id=?
+            """,(password_hash("EliteDemo123!"),demo["id"]))
+    
+        uid = c.execute("SELECT id FROM users WHERE username='t-money'").fetchone()["id"]
+        baseball = c.execute("SELECT id FROM sports WHERE slug='baseball'").fetchone()["id"]
+        racing = c.execute("SELECT id FROM sports WHERE slug='racing'").fetchone()["id"]
+    
+        c.execute("INSERT OR IGNORE INTO user_sport_memberships(user_id,sport_id,role) VALUES(?,?,?)",(uid,baseball,"PLAYER"))
+        c.execute("INSERT OR IGNORE INTO user_sport_memberships(user_id,sport_id,role) VALUES(?,?,?)",(uid,racing,"PLAYER"))
+    
+        if c.execute("SELECT COUNT(*) n FROM careers WHERE user_id=?",(uid,)).fetchone()["n"] == 0:
+            c.execute("""INSERT INTO careers(user_id,sport_id,external_career_id,display_name,team_name,role_name,season_label)
+                         VALUES(?,?,?,?,?,?,?)""",(uid,baseball,"ebl-player-1","Thomas Garner","Atlanta Firebirds","SS","Season 3"))
+            c.execute("""INSERT INTO careers(user_id,sport_id,external_career_id,display_name,team_name,role_name,season_label)
+                         VALUES(?,?,?,?,?,?,?)""",(uid,racing,"escr-driver-1","T. Garner","#28 • Garner Racing","Driver","Season 1"))
+    
+        if c.execute("SELECT COUNT(*) n FROM legacy_events WHERE user_id=?",(uid,)).fetchone()["n"] == 0:
+            c.executemany("""INSERT INTO legacy_events(user_id,sport_id,event_type,title,points) VALUES(?,?,?,?,?)""",[
+                (uid,baseball,"CHAMPIONSHIP","Baseball Championship",500),
+                (uid,baseball,"MAJOR_AWARD","Season MVP",250),
+                (uid,baseball,"SEASON_COMPLETED","Completed Baseball Season",100),
+                (uid,baseball,"SEASON_COMPLETED","Completed Baseball Season",100),
+                (uid,baseball,"SEASON_COMPLETED","Completed Baseball Season",100),
+                (uid,racing,"WIN","First Career Racing Win",150),
+                (uid,racing,"SEASON_COMPLETED","Completed Racing Season",100),
+            ])
+    
+    
+        c.execute("""INSERT INTO profile_settings(user_id,bio,banner_label,featured_sport_slug)
+                     VALUES(?,?,?,?)
+                     ON CONFLICT(user_id) DO NOTHING""",
+                  (uid,"Multi-sport Elite competitor building a legacy across the universe.",
+                   "FOUNDING MEMBER","baseball"))
+    
+        if c.execute("SELECT COUNT(*) n FROM activity_feed WHERE user_id=?",(uid,)).fetchone()["n"] == 0:
+            c.executemany("""INSERT INTO activity_feed(
+              user_id,sport_id,activity_type,title,description,external_ref,visibility,occurred_at
+            ) VALUES(?,?,?,?,?,?,?,?)""",[
+              (uid,baseball,"CHAMPIONSHIP","Won the EBL Championship",
+               "Captured a Baseball championship with the Atlanta Firebirds.",
+               "demo-ebl-title","PUBLIC","2026-08-30 20:00:00"),
+              (uid,racing,"CAREER_WIN","First Elite Stock Car victory",
+               "Earned the first career win in Elite Stock Car Racing.",
+               "demo-escr-win","PUBLIC","2026-09-08 19:30:00"),
+              (uid,baseball,"SEASON_MILESTONE","Completed another EBL season",
+               "Added another completed Baseball season to the Career Passport.",
+               "demo-ebl-season","PUBLIC","2026-09-02 18:00:00")
+            ])
+    
+        if c.execute("SELECT COUNT(*) n FROM hub_news").fetchone()["n"] == 0:
+            basketball = c.execute("SELECT id FROM sports WHERE slug='basketball'").fetchone()["id"]
+            c.executemany("""INSERT INTO hub_news(sport_id,headline,summary,priority,is_featured) VALUES(?,?,?,?,?)""",[
+                (baseball,"Atlanta clinches division title","A late-season surge locks up the division and sets the stage for October.",10,1),
+                (racing,"Rookie earns first career victory","The newest Elite series produces its first breakout moment of the season.",9,1),
+                (basketball,"Basketball league foundation enters planning phase","Teams, careers, contracts and season structure are being designed now.",8,0),
+            ])
     c.commit()
     c.close()
 
@@ -703,7 +715,7 @@ def create_external_link_ticket(user_id, sport_id, ttl_seconds=300):
     }
     raw=json.dumps(payload,separators=(",",":"),sort_keys=True).encode("utf-8")
     sig=hmac.new(GATEWAY_SECRET.encode("utf-8"),raw,hashlib.sha256).digest()
-    return b64url_encode(raw)+"."+b64url_encode(sig)
+    return b64url(raw)+"."+b64url(sig)
 
 def verify_external_link_ticket(ticket):
     try:
@@ -1637,7 +1649,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
             sports = rows("""
-              SELECT s.id,s.slug,s.name,s.icon,s.status,s.entry_url,s.sort_order,
+              SELECT s.id,s.slug,s.name,s.icon,s.status,s.base_url,s.sort_order,
                      usm.role membership_role,usm.last_active_at
               FROM sports s
               LEFT JOIN user_sport_memberships usm
@@ -1817,5 +1829,6 @@ if __name__ == "__main__":
     init_community_schema()
     init_security_schema()
     print(f"Elite Core running on http://localhost:{PORT}")
-    print("Demo login: t-money / EliteDemo123!")
+    if os.environ.get("ELITE_SEED_DEMO","0") == "1":
+        print("Development demo account seeded.")
     ThreadingHTTPServer((HOST,PORT),Handler).serve_forever()

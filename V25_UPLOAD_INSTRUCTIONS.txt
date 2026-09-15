@@ -1,0 +1,15 @@
+ELITE SPORTS LEAGUES V25 — MY ELITE NETWORK DASHBOARD
+
+Upload all files in this ZIP to the Elite Sports Leagues repository root, replacing matching V24 files.
+
+V25 changes:
+- ESPN-style MY ELITE network navigation
+- Shared identity dashboard presentation
+- Correct active-career and unread-notification counters
+- Active career center tied to account careers
+- Elite Wire network news feed
+- Baseball LIVE and Racing ALPHA are both launchable through the secure gateway
+- ENTER EBL / ENTER ESCR controls
+- Mobile dashboard polish
+
+Keep the canonical Drive backend server.py as the source of truth.

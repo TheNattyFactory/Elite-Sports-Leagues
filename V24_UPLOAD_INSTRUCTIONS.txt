@@ -1,0 +1,23 @@
+ELITE SPORTS LEAGUES — V24 SHARED IDENTITY GATEWAY
+
+Upload the full contents of this package to the Elite Sports Leagues repository root.
+
+V24 includes:
+- V23 mobile/network styling
+- V22 ESPN-style Elite Network homepage
+- current shared-account server.py
+- working account creation/login pages
+- Baseball and Stock Car Racing cards routed through the secure Elite gateway
+- development sport cards remain non-launchable
+
+Railway environment variables:
+ELITE_ENV=production
+ELITE_GATEWAY_SECRET=<strong random secret>
+ELITE_APP_BASE_URL=<hub public URL>
+ELITE_BASEBALL_URL=<Elite Baseball public URL>
+ELITE_RACING_URL=<Elite Stock Car Racing public URL when deployed>
+ELITE_EMAIL_PROVIDER=resend
+RESEND_API_KEY=<key>
+ELITE_EMAIL_FROM=<verified sender>
+
+Do not set ELITE_SEED_DEMO=1 in production.
