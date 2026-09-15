@@ -1,0 +1,26 @@
+ELITE SPORTS LEAGUES V30 — EBL CAREER PASSPORT BRIDGE
+
+Deploy over V29.
+
+SET ON ELITE SPORTS LEAGUES:
+ELITE_BASEBALL_BRIDGE_URL=https://YOUR-EBL-DOMAIN
+
+REQUIRES ON EBL:
+EBL - Elite Sports Core Bridge V1
+
+WHAT V30 ADDS
+- Completes the Universal Profile database schema used by V28/V29.
+- POST /api/integrations/baseball/sync
+- Sync EBL Career button on your own Universal Elite Profile.
+- Imports Baseball athlete/team/position plus season, award and championship counters.
+- Uses the existing sport_account_links identity mapping; it does NOT auto-link accounts by matching usernames.
+- Updates last_synced_at after a successful sync.
+
+SECURITY
+- Existing Elite login + CSRF protection required.
+- Existing Elite↔EBL external account link must already exist.
+- EBL external user ID must match the linked Elite record.
+- No EBL password, email, reset token or session data is imported.
+
+NEXT
+Implement EBL consumption of the existing one-time Elite gateway token so ENTER EBL becomes true shared-account SSO.
