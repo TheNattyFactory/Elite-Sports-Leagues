@@ -228,9 +228,24 @@ def send_transactional_email(user_id,email,email_type,subject,token):
         )
         try:
             with urllib.request.urlopen(req,timeout=10) as resp:
-                return 200 <= resp.status < 300
+                ok = 200 <= resp.status < 300
+                print(f"EMAIL_DELIVERY {'SUCCESS' if ok else 'FAILED'} type={email_type} provider=resend status={resp.status}", flush=True)
+                if not ok:
+                    security_event(user_id,"EMAIL_DELIVERY_FAILED",{"type":email_type,"status":resp.status})
+                return ok
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read().decode("utf-8", errors="replace")[:500]
+            except Exception:
+                detail = ""
+            safe_detail = re.sub(r'(?i)(bearer\s+)[^\s"}]+', r'\1[REDACTED]', detail)
+            print(f"EMAIL_DELIVERY FAILED type={email_type} provider=resend http_status={exc.code} detail={safe_detail}", flush=True)
+            security_event(user_id,"EMAIL_DELIVERY_FAILED",{"type":email_type,"http_status":exc.code,"error":safe_detail[:200]})
+            return False
         except Exception as exc:
-            security_event(user_id,"EMAIL_DELIVERY_FAILED",{"type":email_type,"error":str(exc)[:200]})
+            safe_error = str(exc)[:300]
+            print(f"EMAIL_DELIVERY FAILED type={email_type} provider=resend error={safe_error}", flush=True)
+            security_event(user_id,"EMAIL_DELIVERY_FAILED",{"type":email_type,"error":safe_error[:200]})
             return False
 
     raise RuntimeError(f"Unsupported email provider: {EMAIL_PROVIDER}")
@@ -989,8 +1004,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length",str(len(body)))
         self.send_header("Cache-Control","no-store")
         if extra_headers:
-            header_items = extra_headers.items() if hasattr(extra_headers, "items") else extra_headers
-            for k,v in header_items:
+            for k,v in extra_headers.items():
                 self.send_header(k,v)
         self.end_headers()
         self.wfile.write(body)
