@@ -1,0 +1,9 @@
+-- Elite Core v9 launch/security
+CREATE TABLE IF NOT EXISTS email_verification_tokens(id INTEGER PRIMARY KEY,user_id INTEGER NOT NULL,token_hash TEXT UNIQUE NOT NULL,expires_at TEXT NOT NULL,used_at TEXT,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS password_reset_tokens(id INTEGER PRIMARY KEY,user_id INTEGER NOT NULL,token_hash TEXT UNIQUE NOT NULL,expires_at TEXT NOT NULL,used_at TEXT,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS account_security_events(id INTEGER PRIMARY KEY,user_id INTEGER,event_type TEXT NOT NULL,ip_hash TEXT,user_agent_summary TEXT,metadata_json TEXT DEFAULT '{}',created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS login_attempts(id INTEGER PRIMARY KEY,identity_hash TEXT NOT NULL,ip_hash TEXT,was_successful INTEGER DEFAULT 0,attempted_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS legal_documents(id INTEGER PRIMARY KEY,document_key TEXT NOT NULL,version TEXT NOT NULL,title TEXT NOT NULL,published_at TEXT DEFAULT CURRENT_TIMESTAMP,is_current INTEGER DEFAULT 1,UNIQUE(document_key,version));
+CREATE TABLE IF NOT EXISTS legal_acceptances(user_id INTEGER NOT NULL,legal_document_id INTEGER NOT NULL,accepted_at TEXT DEFAULT CURRENT_TIMESTAMP,PRIMARY KEY(user_id,legal_document_id));
+CREATE TABLE IF NOT EXISTS invitations(id INTEGER PRIMARY KEY,email_normalized TEXT,invite_code_hash TEXT UNIQUE NOT NULL,invited_by_user_id INTEGER,sport_id INTEGER,intended_role TEXT,expires_at TEXT,redeemed_by_user_id INTEGER,redeemed_at TEXT,created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS account_actions(id INTEGER PRIMARY KEY,user_id INTEGER NOT NULL,action_type TEXT NOT NULL,reason TEXT,starts_at TEXT DEFAULT CURRENT_TIMESTAMP,ends_at TEXT,created_by_user_id INTEGER,created_at TEXT DEFAULT CURRENT_TIMESTAMP);

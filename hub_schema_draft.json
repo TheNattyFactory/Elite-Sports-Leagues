@@ -1,0 +1,64 @@
+{
+  "users": [
+    "id",
+    "username",
+    "email",
+    "password_hash",
+    "display_name",
+    "avatar_url",
+    "legacy_points",
+    "created_at",
+    "status"
+  ],
+  "sports": [
+    "id",
+    "slug",
+    "name",
+    "short_name",
+    "status",
+    "base_url",
+    "icon",
+    "sort_order",
+    "is_public"
+  ],
+  "user_sport_memberships": [
+    "id",
+    "user_id",
+    "sport_id",
+    "sport_user_id",
+    "role",
+    "joined_at",
+    "last_active_at"
+  ],
+  "careers": [
+    "id",
+    "user_id",
+    "sport_id",
+    "external_career_id",
+    "display_name",
+    "team_name",
+    "role_name",
+    "season_label",
+    "status"
+  ],
+  "legacy_events": [
+    "id",
+    "user_id",
+    "sport_id",
+    "event_type",
+    "title",
+    "points",
+    "metadata_json",
+    "created_at"
+  ],
+  "hub_news": [
+    "id",
+    "sport_id",
+    "headline",
+    "summary",
+    "url",
+    "priority",
+    "published_at",
+    "is_featured"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "principle": "Universal shell, sport-specific payload.",
+  "statuses": [
+    "UPCOMING",
+    "LIVE",
+    "FINAL",
+    "POSTPONED",
+    "CANCELLED"
+  ],
+  "event_types": [
+    "GAME",
+    "MATCH",
+    "RACE",
+    "FIGHT_CARD",
+    "TOURNAMENT",
+    "ROUND",
+    "QUALIFYING",
+    "DRAFT",
+    "AWARDS",
+    "CUSTOM"
+  ],
+  "universal_fields": [
+    "external_event_id",
+    "event_type",
+    "title",
+    "subtitle",
+    "event_status",
+    "starts_at",
+    "ends_at",
+    "primary_label",
+    "secondary_label",
+    "detail_label",
+    "action_label",
+    "action_path",
+    "is_featured"
+  ],
+  "rule": "Elite Core displays summaries; each sport remains authoritative for simulation, scoring, live state, detailed statistics and presentation."
+}

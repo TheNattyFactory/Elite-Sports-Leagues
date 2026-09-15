@@ -220,3 +220,66 @@ body:after{
   .hero-brand{width:92%}
   .brand-logo{height:42px}
 }
+
+/* ===== V16 RESPONSIVE / BROADCAST POLISH ===== */
+.broadcast-ticker{overflow:hidden}
+.ticker-row{overflow:hidden;min-width:0}
+.ticker-track{
+  flex:0 0 max-content;
+  width:max-content;
+  min-width:max-content;
+  white-space:nowrap;
+}
+.ticker-track span{display:inline-block;flex:0 0 auto;white-space:nowrap}
+
+.statstrip .stat{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:4px;
+}
+.statstrip .stat b{line-height:1;overflow-wrap:anywhere}
+.statstrip .stat span{line-height:1.35}
+
+@media(max-width:700px){
+  .shell{width:min(100% - 24px,1180px)}
+  .nav{padding:10px 0}
+  .navlinks{gap:4px}
+  .navlinks .btn{padding:9px 11px;font-size:12px}
+  .brand-logo{max-width:205px;height:auto}
+  .hero{min-height:auto;padding:46px 0 34px}
+  .hero:after{opacity:.25;width:75%}
+  .hero-brand{width:min(410px,92vw);margin-bottom:22px}
+  .hero h1{font-size:clamp(44px,13vw,66px);line-height:.94;margin-top:10px}
+  .hero p{font-size:16px;line-height:1.6}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:10px}
+  .hero-actions .btn{width:100%;text-align:center;padding:13px 14px}
+  .statstrip{grid-template-columns:1fr 1fr;gap:9px;margin-top:25px}
+  .statstrip .stat{padding:14px 12px;min-height:88px}
+  .statstrip .stat b{font-size:20px}
+  .statstrip .stat span{font-size:12px}
+  .ticker-label{font-size:10px;padding:11px 12px;flex:0 0 auto}
+  .ticker-track{gap:24px;padding-left:20px;font-size:12px}
+  .section{padding:22px 0}
+  .section-head{align-items:flex-start;flex-direction:column}
+  .world-card{min-height:210px}
+}
+
+@media(max-width:390px){
+  .statstrip{grid-template-columns:1fr}
+  .statstrip .stat{min-height:72px}
+  .hero h1{font-size:43px}
+}
+
+/* V17 — FULL LEAGUE BRANDING */
+.league-logo{
+  width:150px;height:112px;object-fit:contain;display:block;
+  margin:-6px 0 4px;filter:drop-shadow(0 12px 18px rgba(0,0,0,.42));
+  transition:transform .18s ease,filter .18s ease
+}
+.world-card:hover .league-logo{transform:translateY(-4px) scale(1.035);filter:drop-shadow(0 16px 24px rgba(0,0,0,.5))}
+.world-hockey{--sport-bg:radial-gradient(circle at 78% 22%,rgba(54,168,255,.25),transparent 34%)}
+.world-soccer{--sport-bg:radial-gradient(circle at 78% 22%,rgba(123,221,53,.22),transparent 34%)}
+.world-tennis{--sport-bg:radial-gradient(circle at 78% 22%,rgba(181,230,45,.22),transparent 34%)}
+@media(max-width:560px){.league-logo{width:132px;height:98px}}

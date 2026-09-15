@@ -1,0 +1,61 @@
+{
+  "version": "1.0",
+  "purpose": "Allow independently deployed Elite sports to publish trusted summaries and trigger Core-owned fan/account notifications.",
+  "authentication": {
+    "development": "per-sport adapter key",
+    "production": "rotatable hashed service credentials; TLS; replay protection; timestamp/nonce signing recommended"
+  },
+  "publication_types": {
+    "EVENT_UPSERT": {
+      "required": [
+        "external_id",
+        "event_type",
+        "title",
+        "event_status"
+      ],
+      "use": "Create/update universal Event Cards."
+    },
+    "CAREER_UPSERT": {
+      "required": [
+        "external_id",
+        "elite_user_id",
+        "athlete_name",
+        "career_status"
+      ],
+      "use": "Update Career Passport summary."
+    },
+    "HONOR_AWARDED": {
+      "required": [
+        "external_id",
+        "elite_user_id",
+        "title",
+        "honor_type"
+      ],
+      "use": "Add Trophy Room/history honor."
+    },
+    "ACTIVITY": {
+      "required": [
+        "external_id",
+        "elite_user_id",
+        "title",
+        "activity_type"
+      ],
+      "use": "Add historical/social activity."
+    },
+    "NOTIFY": {
+      "required": [
+        "external_id",
+        "audience",
+        "title"
+      ],
+      "use": "Request a Core notification. Core applies preferences and delivery rules."
+    }
+  },
+  "audiences": [
+    "ELITE_USER",
+    "EVENT_FOLLOWERS",
+    "SPORT_MEMBERS",
+    "TEAM_OR_ORGANIZATION_MEMBERS"
+  ],
+  "critical_rule": "Sports request notifications; Elite Core decides recipient eligibility, preferences, blocking/moderation constraints, and delivery."
+}

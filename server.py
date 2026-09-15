@@ -991,7 +991,13 @@ class Handler(BaseHTTPRequestHandler):
             ".html":"text/html; charset=utf-8",
             ".css":"text/css; charset=utf-8",
             ".js":"application/javascript; charset=utf-8",
-            ".json":"application/json; charset=utf-8"
+            ".json":"application/json; charset=utf-8",
+            ".svg":"image/svg+xml; charset=utf-8",
+            ".png":"image/png",
+            ".jpg":"image/jpeg",
+            ".jpeg":"image/jpeg",
+            ".webp":"image/webp",
+            ".ico":"image/x-icon"
         }.get(ext,"application/octet-stream")
         data = path.read_bytes()
         self.send_response(200)
@@ -1781,26 +1787,17 @@ class Handler(BaseHTTPRequestHandler):
                 """,(user["id"],))
                 return self.send_json({"events":data})
 
-        if p == "/" or p == "/index.html":
+        # Root-level frontend assets. Keep the public surface deliberately limited
+        # to known web file types and reject nested paths/path traversal.
+        if p == "/":
             return self.send_file(ROOT / "index.html")
-        if p == "/styles.css":
-            return self.send_file(ROOT / "styles.css")
-        if p == "/app.js":
-            return self.send_file(ROOT / "app.js")
-        if p == "/sport-demo.html":
-            return self.send_file(ROOT / "sport-demo.html")
-        if p == "/profile.html":
-            return self.send_file(ROOT / "profile.html")
-        if p == "/community.html":
-            return self.send_file(ROOT / "community.html")
-        if p == "/verify.html":
-            return self.send_file(ROOT / "verify.html")
-        if p == "/reset-password.html":
-            return self.send_file(ROOT / "reset-password.html")
-        if p == "/dashboard.html":
-            return self.send_file(ROOT / "dashboard.html")
-        if p == "/ebl-integration.html":
-            return self.send_file(ROOT / "ebl-integration.html")
+
+        asset_name = p.lstrip("/")
+        allowed_exts = {".html", ".css", ".js", ".json", ".svg", ".png", ".jpg", ".jpeg", ".webp", ".ico"}
+        if asset_name and "/" not in asset_name and "\\" not in asset_name and ".." not in asset_name:
+            asset_path = ROOT / asset_name
+            if asset_path.suffix.lower() in allowed_exts and asset_path.exists() and asset_path.is_file():
+                return self.send_file(asset_path)
 
         self.send_error(404)
 

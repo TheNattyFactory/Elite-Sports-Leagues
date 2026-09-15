@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "health_states": [
+    "ONLINE",
+    "DEGRADED",
+    "OFFLINE",
+    "MAINTENANCE",
+    "UNKNOWN"
+  ],
+  "incident_severity": [
+    "LOW",
+    "MEDIUM",
+    "HIGH",
+    "CRITICAL"
+  ],
+  "report_status": [
+    "OPEN",
+    "REVIEWING",
+    "ACTIONED",
+    "DISMISSED"
+  ],
+  "announcement_severity": [
+    "INFO",
+    "NOTICE",
+    "WARNING",
+    "CRITICAL"
+  ],
+  "admin_roles": [
+    "SUPER_ADMIN",
+    "PLATFORM_ADMIN",
+    "MODERATOR",
+    "SUPPORT",
+    "SPORT_OPERATOR",
+    "READ_ONLY_AUDITOR"
+  ],
+  "principle": "Platform administration observes and governs shared infrastructure; sport administration governs sport-specific competition."
+}

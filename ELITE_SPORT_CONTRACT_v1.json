@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "philosophy": "Shared identity. Separate worlds. Connected legacy.",
+  "elite_core_owns": [
+    "identity",
+    "authentication",
+    "gateway",
+    "career_passport",
+    "trophy_room",
+    "legacy",
+    "friends",
+    "messaging",
+    "notifications",
+    "moderation",
+    "sport_directory"
+  ],
+  "sport_owns": [
+    "athletes",
+    "teams",
+    "sport_rules",
+    "simulation_engine",
+    "attributes",
+    "statistics",
+    "contracts",
+    "rankings",
+    "schedule",
+    "sport_awards",
+    "visual_identity"
+  ],
+  "career_summary": {
+    "external_career_id": "string",
+    "athlete_name": "string",
+    "organization_name": "string|null",
+    "role_name": "string|null",
+    "current_season": "string|null",
+    "career_status": "ACTIVE|RETIRED|HALL_OF_FAME",
+    "headline": "string|null",
+    "profile_path": "string|null",
+    "headline_stats": [
+      {
+        "key": "sport-defined",
+        "label": "sport-defined",
+        "value": "display string"
+      }
+    ],
+    "honors": [
+      {
+        "external_honor_id": "string",
+        "type": "sport-defined",
+        "title": "string",
+        "season_label": "string|null",
+        "event_label": "string|null",
+        "is_major": "boolean"
+      }
+    ]
+  },
+  "adapter_contract": [
+    "GET /elite/profile",
+    "GET /elite/career",
+    "GET /elite/achievements",
+    "GET /elite/news",
+    "GET /elite/status"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "activity_types": [
+    "CHAMPIONSHIP",
+    "AWARD",
+    "RECORD",
+    "HALL_OF_FAME",
+    "CAREER_WIN",
+    "SEASON_MILESTONE",
+    "TEAM_CHANGE",
+    "DEBUT",
+    "RETIREMENT",
+    "RANKING_MILESTONE"
+  ],
+  "visibility": [
+    "PUBLIC",
+    "FRIENDS",
+    "PRIVATE"
+  ],
+  "design_rule": "Activity is historical/social context only and never grants gameplay power.",
+  "examples": {
+    "baseball": "Won the EBL Championship",
+    "racing": "First career victory",
+    "golf": "Won the Elite Open",
+    "mma": "Captured the Welterweight Championship"
+  }
+}

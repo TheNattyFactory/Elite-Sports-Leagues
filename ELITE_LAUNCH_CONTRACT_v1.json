@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "states": [
+    "INVITED",
+    "REGISTERED",
+    "EMAIL_UNVERIFIED",
+    "ACTIVE",
+    "RESTRICTED",
+    "SUSPENDED",
+    "BANNED"
+  ],
+  "security_events": [
+    "REGISTER",
+    "LOGIN_SUCCESS",
+    "LOGIN_FAILURE",
+    "EMAIL_VERIFIED",
+    "PASSWORD_RESET_REQUESTED",
+    "PASSWORD_RESET_COMPLETED",
+    "SESSION_REVOKED",
+    "ACCOUNT_RESTRICTED"
+  ],
+  "legal_documents": [
+    "TERMS",
+    "PRIVACY",
+    "COMMUNITY_RULES"
+  ]
+}
