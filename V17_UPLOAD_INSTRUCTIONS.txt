@@ -1,0 +1,32 @@
+ELITE SPORTS LEAGUES — V17 FULL LEAGUE BRANDING
+
+GITHUB REPO:
+TheNattyFactory/Elite-Sports-Leagues
+
+WHAT TO DO:
+1. Open the repository root.
+2. Upload ALL files from this V17 package into the ROOT of the repo.
+3. Choose Replace when GitHub warns that files already exist.
+4. Do NOT make a static folder.
+5. Commit directly to main.
+6. Railway will automatically redeploy.
+
+THE THREE MAIN FILES BEING REPLACED:
+- index.html
+- styles.css
+- server.py
+
+NEW BRAND ASSETS:
+- logo-baseball.svg
+- logo-racing.svg
+- logo-golf.svg
+- logo-basketball.svg
+- logo-football.svg
+- logo-hockey.svg
+- logo-soccer.svg
+- logo-mma.svg
+- logo-tennis.svg
+
+IMPORTANT:
+Existing pages, Core APIs, database schema, Railway config, auth, gateway,
+and other project files stay in the repo. This package is an incremental V17 update.

@@ -1,0 +1,20 @@
+ELITE SPORTS LEAGUES — V20 FUNCTIONAL HUB
+
+Upload ALL files in this ZIP to the ROOT of:
+TheNattyFactory/Elite-Sports-Leagues
+
+Replace matching files and commit to main. Do NOT create a static folder.
+
+V20 focus:
+- authenticated Elite Hub
+- account readiness / verification warning
+- live Core dashboard data
+- Career Passport / Community / Events navigation
+- live sport launcher
+- ENTER EBL uses the secure Core gateway endpoint
+- coming-soon sports stay locked
+- sign out
+- password reset link
+- mobile Hub polish
+
+This preserves the existing Core backend and production security work.

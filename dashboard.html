@@ -1,38 +1,74 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elite Hub</title><link rel="stylesheet" href="/styles.css"></head>
-<body>
-<header class="topbar"><div class="shell nav"><a class="brand" href="/"><img class="brand-logo compact" src="/elite-sports-logo.svg" alt="Elite Sports Leagues"></a><div class="navlinks"><a href="/profile.html">Profile</a><a href="/events.html">Events</a><button class="btn secondary" onclick="logout()">Sign out</button></div></div></header>
-<main class="shell dashboard"><section class="dashboard-hero"><div class="eyebrow live-pulse">ELITE CORE ONLINE</div><h1>Your sports universe.</h1><p class="muted">Every career. Every championship. One permanent identity.</p></section>
-<div class="userline"><div class="userblock"><div class="avatar" id="avatar">E</div><div><div class="eyebrow">Elite identity</div><h2 id="welcome" style="margin:4px 0">Loading…</h2></div></div><span class="tag live" id="accountState">ONLINE</span></div>
-<div class="kpi-row"><div class="kpi"><b id="legacy">—</b><span>Legacy</span></div><div class="kpi"><b id="careerCount">—</b><span>Careers</span></div><div class="kpi"><b id="friendCount">—</b><span>Friends</span></div><div class="kpi"><b id="notificationCount">—</b><span>Notifications</span></div></div>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elite Hub • Elite Sports Leagues</title><link rel="stylesheet" href="/styles.css">
+</head><body>
+<header class="topbar"><div class="shell nav">
+<a class="brand" href="/"><span class="core-wordmark text-only"><span class="core-name"><b>ELITE SPORTS</b><small>LEAGUES</small></span></span></a>
+<nav class="navlinks"><a href="/passport.html">Passport</a><a href="/community.html">Community</a><a href="/events.html">Events</a><button class="btn secondary" id="logoutBtn">Sign out</button></nav>
+</div></header>
+<main class="shell dashboard">
+<section class="dashboard-hero">
+<div class="eyebrow live-pulse">ELITE CORE ONLINE</div>
+<h1 id="hello">Welcome to Elite.</h1>
+<p class="muted">Your careers. Your history. Your sports universe.</p>
+<div class="hub-actions"><a class="btn secondary" href="/passport.html">Career Passport</a><a class="btn secondary" href="/community.html">Community</a><a class="btn secondary" href="/events.html">Live Events</a></div>
+</section>
 
-<section class="section"><div class="section-head"><div><div class="eyebrow">Continue playing</div><h2>Your sports</h2></div></div><div id="sportsGrid" class="grid"></div></section>
+<div id="verifyNotice" class="elite-notice hidden"><b>Verify your email to enter sport worlds.</b><span>Your Core account works now, but sport handoff stays locked until verification is complete.</span><a class="btn" href="/verify.html">Verify Email</a></div>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">YOUR ELITE IDENTITY</div><h2 id="displayName">Loading…</h2></div><span id="accountBadge" class="tag live">CONNECTED</span></div>
+<div class="kpi-row"><div class="kpi"><b id="legacy">0</b><span>Legacy</span></div><div class="kpi"><b id="careers">0</b><span>Careers</span></div><div class="kpi"><b id="friends">0</b><span>Friends</span></div><div class="kpi"><b id="notifications">0</b><span>Notifications</span></div></div></section>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">CHOOSE YOUR ARENA</div><h2>Your Sport Worlds</h2></div><p>One account. Separate careers.</p></div>
+<div id="sportGrid" class="grid"><div class="card"><p class="muted">Loading Elite network…</p></div></div></section>
 
 <section class="section"><div class="two-col">
-<div class="card"><div class="eyebrow">Elite activity</div><h2>Across your universe</h2><div id="activity"><p class="muted">Loading activity…</p></div></div>
-<div class="card"><div class="eyebrow">Trophy Case</div><h2>Legacy highlights</h2><div id="trophies"><p class="muted">Loading honors…</p></div></div>
+<div class="card glass"><div class="eyebrow">NETWORK FEED</div><h2>Across Elite</h2><div id="feed"><p class="muted">Loading activity…</p></div></div>
+<div class="card legacy-banner"><div class="eyebrow">TROPHY ROOM</div><h2>Your Legacy</h2><div id="honors"><p class="muted">Your first trophy is waiting.</p></div></div>
 </div></section>
 </main>
 <script>
-async function getJSON(url,opts){const r=await fetch(url,opts); if(r.status===401){location.href='/login.html';throw 0} const j=await r.json(); if(!r.ok) throw new Error(j.error||'REQUEST_FAILED'); return j}
-async function boot(){
- try{
-  const me=await getJSON('/api/auth/me');
-  const name=me.user?.display_name||me.user?.username||'Elite Player';
-  welcome.textContent=name; avatar.textContent=name[0].toUpperCase();
-  const d=await getJSON('/api/dashboard');
-  legacy.textContent=d.legacy?.points??d.user?.legacy_points??0;
-  careerCount.textContent=d.careers?.length??0; friendCount.textContent=d.counts?.friends??0; notificationCount.textContent=d.counts?.notifications??0;
-  const sports=d.sports||[];
-  sportsGrid.innerHTML=sports.map(s=>`<div class="card sport-card world-card"><div class="sport-icon">${s.icon||'🏆'}</div><h3>${s.name}</h3><p>${s.summary||'Elite sport world'}</p><span class="tag ${s.status==='LIVE'?'live':''}">${s.status||'AVAILABLE'}</span><div class="sport-footer"><button class="btn" onclick="enterSport('${s.slug}')">${s.membership?'Continue career':'Enter sport'}</button><span class="arrow">→</span></div></div>`).join('')||'<p class="muted">Sports are coming online.</p>';
-  const acts=d.activity||d.news||[];
-  activity.innerHTML=acts.slice(0,6).map(a=>`<div class="feed-item"><div class="dot"></div><div><b>${a.title||a.type||'Elite update'}</b><p>${a.summary||a.body||''}</p></div></div>`).join('')||'<p class="muted">Your Elite history starts here.</p>';
-  const hs=d.honors||[];
-  trophies.innerHTML=hs.slice(0,5).map(h=>`<div class="trophy"><div class="icon">🏆</div><div><b>${h.title||h.name||'Honor'}</b><div class="muted">${h.sport_name||''}</div></div></div>`).join('')||'<p class="muted">Win something legendary and it will live here forever.</p>';
- }catch(e){if(e) console.error(e)}
+async function api(url,opts={}){
+ const r=await fetch(url,opts);
+ let j={}; try{j=await r.json()}catch{}
+ if(r.status===401){location.replace('/login.html');throw new Error('AUTH_REQUIRED')}
+ if(!r.ok) throw new Error(j.error||'REQUEST_FAILED');
+ return j;
 }
+function sportLogo(slug){const m={baseball:'logo-baseball.svg',racing:'logo-racing.svg',golf:'logo-golf.svg',basketball:'logo-basketball.svg',football:'logo-football.svg',hockey:'logo-hockey.svg',soccer:'logo-soccer.svg',mma:'logo-mma.svg',tennis:'logo-tennis.svg'};return m[slug]||'elite-crest.svg'}
 async function enterSport(slug){
- try{const j=await getJSON('/api/gateway/enter/'+slug); if(j.url) location.href=j.url; else if(j.redirect_url) location.href=j.redirect_url; else throw new Error('NO_GATEWAY_URL')}catch(e){alert(String(e.message||e).replaceAll('_',' '))}
+ const b=document.querySelector(`[data-enter="${slug}"]`); if(b){b.disabled=true;b.textContent='CONNECTING…'}
+ try{
+  const j=await api('/api/gateway/enter/'+encodeURIComponent(slug));
+  const url=j.url||j.redirect_url||j.gateway_url;
+  if(!url) throw new Error(j.error||'SPORT_NOT_READY');
+  location.href=url;
+ }catch(e){alert(String(e.message||e).replaceAll('_',' '));if(b){b.disabled=false;b.textContent=slug==='baseball'?'ENTER EBL':'ENTER SPORT'}}
 }
-async function logout(){try{await fetch('/api/auth/logout',{method:'POST'});}finally{location.href='/'}}
-boot();
+async function boot(){
+ const me=await api('/api/auth/me');
+ const u=me.user||me;
+ const name=u.display_name||u.username||'Elite Player';
+ displayName.textContent=name; hello.textContent=`Welcome, ${name}.`;
+ const ready=await api('/api/account/readiness').catch(()=>({}));
+ const verified=ready.email_verified ?? u.email_verified ?? true;
+ if(!verified) verifyNotice.classList.remove('hidden');
+ const d=await api('/api/dashboard');
+ legacy.textContent=d.legacy?.points ?? d.user?.legacy_points ?? u.legacy_points ?? 0;
+ careers.textContent=d.careers?.length ?? d.counts?.careers ?? 0;
+ friends.textContent=d.counts?.friends ?? d.friends_count ?? 0;
+ notifications.textContent=d.counts?.notifications ?? d.notification_count ?? 0;
+ const sports=d.sports||[];
+ sportGrid.innerHTML=sports.map(s=>{
+  const slug=s.slug||'sport', live=(s.status||'').toUpperCase()==='LIVE'||slug==='baseball';
+  const action=live?`<button class="btn" data-enter="${slug}" onclick="enterSport('${slug}')">${slug==='baseball'?'ENTER EBL':'ENTER SPORT'}</button>`:`<button class="btn secondary" disabled>COMING SOON</button>`;
+  return `<article class="card sport-card world-card world-${slug}"><img class="league-logo" src="/${sportLogo(slug)}" alt=""><h3>${s.name||slug}</h3><p>${s.summary||'Build a new Elite career.'}</p><span class="tag ${live?'live':''}">${live?'LIVE':'IN DEVELOPMENT'}</span><div class="sport-footer">${action}<span class="arrow">→</span></div></article>`
+ }).join('')||`<article class="card sport-card world-card world-baseball"><img class="league-logo" src="https://elite-baseball.com/assets/ebl_logo.png" alt="Elite Baseball League"><h3>Elite Baseball League</h3><p>Build a career. Join a franchise. Write baseball history.</p><span class="tag live">LIVE</span><div class="sport-footer"><button class="btn" data-enter="baseball" onclick="enterSport('baseball')">ENTER EBL</button><span class="arrow">→</span></div></article>`;
+ const items=d.activity||d.news||[];
+ feed.innerHTML=items.slice(0,7).map(x=>`<div class="feed-item"><div class="dot"></div><div><b>${x.title||x.type||'Elite Update'}</b><p>${x.summary||x.body||''}</p></div></div>`).join('')||'<p class="muted">Your Elite story starts here.</p>';
+ const hs=d.honors||d.trophies||[];
+ honors.innerHTML=hs.slice(0,5).map(h=>`<div class="trophy"><div class="icon">🏆</div><div><b>${h.title||h.name||'Elite Honor'}</b><div class="muted">${h.sport_name||''}</div></div></div>`).join('')||'<p class="muted">Championships, awards and records will live here permanently.</p>';
+}
+logoutBtn.onclick=async()=>{try{await api('/api/auth/logout',{method:'POST'})}catch{}location.replace('/')};
+boot().catch(e=>console.error(e));
 </script></body></html>
