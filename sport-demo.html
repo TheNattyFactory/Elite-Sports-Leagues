@@ -1,50 +1,6 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Elite Sport Gateway Demo</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body{display:grid;place-items:center;min-height:100vh;padding:20px}
-    .gateway-demo{width:min(720px,100%);padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--panel)}
-    .gateway-demo pre{white-space:pre-wrap;background:#07111d;border:1px solid var(--line);padding:16px;border-radius:12px;color:var(--muted)}
-  </style>
-</head>
-<body>
-  <main class="gateway-demo">
-    <span class="eyebrow">ELITE SPORT GATEWAY</span>
-    <h1>Secure Handoff Demo</h1>
-    <p id="status">Validating your Elite identity…</p>
-    <pre id="result"></pre>
-    <a class="btn secondary" href="/">← Back to Elite Sports Hub</a>
-  </main>
-<script>
-(async()=>{
-  const qs = new URLSearchParams(location.search);
-  const sport = qs.get("sport");
-  const token = qs.get("token");
-  const status = document.getElementById("status");
-  const result = document.getElementById("result");
-
-  try{
-    const r = await fetch("/api/gateway/consume",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({sport,token})
-    });
-
-    const data = await r.json();
-    if(!r.ok) throw new Error(data.error || "Gateway failed");
-
-    status.textContent =
-      `Identity accepted by ${data.sport.name}. No second login required.`;
-    result.textContent = JSON.stringify(data,null,2);
-  }catch(err){
-    status.textContent = "Gateway validation failed.";
-    result.textContent = String(err.message || err);
-  }
-})();
-</script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elite Racing | Elite Sports Leagues</title><link rel="stylesheet" href="styles.css"><style>
+body{min-height:100vh}.race-shell{width:min(980px,calc(100% - 32px));margin:0 auto;padding:28px 0 70px}.race-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.race-hero{padding:32px;border:1px solid var(--line);border-radius:26px;background:var(--panel);position:relative;overflow:hidden}.race-hero:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(246,194,75,.08));pointer-events:none}.race-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.race-card{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(10,22,38,.72)}.race-card b{display:block;font-size:1.08rem;margin-bottom:6px}.ok{color:#65e6a4}.muted{color:var(--muted)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.identity{margin-top:20px;padding:16px;border:1px solid var(--line);border-radius:16px;background:#07111d}@media(max-width:700px){.race-grid{grid-template-columns:1fr}.race-hero{padding:24px}.race-top{align-items:flex-start;flex-direction:column}}
+</style></head><body><main class="race-shell"><div class="race-top"><div><div class="eyebrow">ELITE SPORTS LEAGUES</div><h2 style="margin:.25rem 0">Elite Stock Car Racing</h2></div><a class="btn secondary" href="/">← Elite Hub</a></div><section class="race-hero"><div class="eyebrow ok">● ELITE IDENTITY GATEWAY</div><h1>Welcome to Racing.</h1><p class="muted">Your Elite account is being handed securely into the Racing world. No second Elite login.</p><div id="identity" class="identity">Connecting your Elite identity…</div><div class="race-grid"><div class="race-card"><b>🏁 Racing Career</b><span class="muted">One driver career connected to your Elite identity.</span></div><div class="race-card"><b>🏆 Career Passport</b><span class="muted">Wins, championships and milestones can return to your Elite profile.</span></div><div class="race-card"><b>🌐 One Network</b><span class="muted">Friends and identity stay with you across Elite sports.</span></div></div><div class="actions"><button id="continue" class="btn primary" disabled>Racing 6.3 connection pending</button><a class="btn secondary" href="/dashboard.html">My Elite Dashboard</a></div><p id="note" class="muted" style="margin-top:18px">This hub side is live. The final button will point to the current Racing 6.3 deployment as soon as that build is placed in the Racing project folder and its URL is configured.</p></section></main><script>
+(async()=>{const q=new URLSearchParams(location.search),sport=q.get('sport'),token=q.get('token'),box=document.getElementById('identity');try{const r=await fetch('/api/gateway/consume',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sport,token})});const d=await r.json();if(!r.ok)throw new Error(d.error||'GATEWAY_FAILED');box.innerHTML='<strong class="ok">✓ Identity connected</strong><br><span class="muted">Signed in as '+String(d.user?.username||d.username||'Elite member').replace(/[<>&]/g,'')+'. Racing membership is ready.</span>';}catch(e){box.innerHTML='<strong style="color:#ff9da8">Connection failed</strong><br><span class="muted">'+String(e.message||e).replace(/[<>&]/g,'')+'</span>';}})();
+</script></body></html>
