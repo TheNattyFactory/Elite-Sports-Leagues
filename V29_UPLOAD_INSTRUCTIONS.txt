@@ -1,0 +1,4 @@
+ELITE SPORTS LEAGUES V29 — CONNECTED ELITE NETWORK
+Upload over V28.
+Adds a public Elite Network activity page, clickable friend identities, incoming friend request actions, clickable notification actions, and safer escaped community rendering.
+No database migration required; V29 uses APIs already present in V28 server.py.
