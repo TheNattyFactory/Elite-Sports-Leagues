@@ -366,13 +366,68 @@ button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:390px){.network-section .section-head{align-items:flex-start;flex-direction:column}.score-card{min-width:88%}}
 
 
-/* V25 — MY ELITE NETWORK DASHBOARD */
-.career-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.career-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#101b2a,#090f18);border-color:#2a3b52}
-.career-card:after{content:"ELITE";position:absolute;right:-8px;bottom:-24px;font-size:72px;font-weight:1000;letter-spacing:-.08em;color:rgba(255,255,255,.025)}
-.career-sport{font-size:11px;font-weight:1000;letter-spacing:.14em;color:#e9b64f;text-transform:uppercase}
-.career-card h3{font-size:25px;margin:10px 0 6px}.career-card p{color:var(--muted);margin:0 0 18px}
-.career-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#91a2b8;font-weight:800}
-.wire-tag{display:inline-block;margin-top:5px;color:#e9b64f;font-size:9px;font-weight:1000;letter-spacing:.12em}
-.dashboard .sport-card .tag{margin-top:14px;display:inline-block}
-@media(max-width:700px){.career-grid{grid-template-columns:1fr}.dashboard-hero{border-radius:18px;padding:22px 18px}.dashboard .section-head{align-items:flex-end}.dashboard .section-head h2{font-size:30px}}
+/* V27 — MOBILE NETWORK POLISH */
+button.card{color:var(--text);text-align:left;-webkit-appearance:none;appearance:none}
+.sport-card h3,.sport-footer{color:var(--text)}
+.sport-card .sport-footer .arrow{color:var(--gold2)}
+.network-nav-inner::-webkit-scrollbar,.score-stack::-webkit-scrollbar{display:none}
+
+@media(max-width:700px){
+  .network-nav{position:relative;top:auto;overflow:hidden}
+  .network-nav .shell{width:100%;padding:0 14px}
+  .network-nav-inner{
+    width:100%;height:48px;gap:0!important;padding:0;overflow-x:auto;overflow-y:hidden;
+    flex-wrap:nowrap;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch
+  }
+  .network-nav-inner a{
+    flex:0 0 auto;display:flex!important;align-items:center;height:48px!important;
+    padding:0 14px!important;margin:0!important;font-size:11px!important;letter-spacing:.08em!important;
+    scroll-snap-align:start
+  }
+  .network-nav-inner a:first-child{padding-left:6px!important}
+
+  .network-section{padding:30px 0 38px!important}
+  .network-section .section-head{margin-bottom:18px!important}
+  .network-section .section-head h2{font-size:36px!important}
+  .lead-story{padding:20px!important;margin-bottom:14px!important}
+  .lead-story h3{font-size:27px!important;line-height:1.12!important}
+  .lead-story p{font-size:15px!important;line-height:1.48!important}
+
+  .score-stack{display:grid!important;grid-template-columns:1fr!important;overflow:visible!important;gap:10px!important;padding:0!important}
+  .score-card{
+    min-width:0!important;width:100%!important;display:grid!important;
+    grid-template-columns:72px minmax(0,1fr) auto!important;
+    grid-template-areas:"state title arrow"!important;gap:12px!important;padding:14px 15px!important
+  }
+  .score-card .score-state{grid-area:state!important;margin:0!important;justify-self:start!important}
+  .score-card>div{grid-area:title!important;min-width:0!important}
+  .score-card>div b{display:block!important;color:#f4f7fb!important;font-size:16px!important;line-height:1.2!important;margin:0 0 3px!important}
+  .score-card>div small{display:block!important;color:#93a5bb!important;font-size:12px!important;line-height:1.35!important;white-space:normal!important}
+  .score-card>span:last-child{grid-area:arrow!important;margin:0!important;color:#e7b54d!important;white-space:nowrap!important}
+
+  .headline-strip{margin-top:14px!important}
+  .headline-strip>*{font-size:13px!important;padding:12px 14px!important}
+
+  #sports .section-head{margin-bottom:14px}
+  .sport-card{color:var(--text)!important;padding:18px!important;min-height:0!important}
+  .sport-card .league-logo{height:118px!important;width:min(100%,230px)!important;margin:0 auto 8px!important}
+  .world-baseball .league-logo{height:132px!important;width:min(100%,245px)!important}
+  .sport-card h3{color:#f5f7fb!important;font-size:21px!important;line-height:1.18!important;text-align:center;margin:4px 0 7px!important}
+  .sport-card p{min-height:0!important;color:#aab7c8!important;font-size:14px!important;line-height:1.4!important;text-align:center}
+  .sport-card .tag{margin-top:13px!important}
+  .sport-footer{color:#eef3f8!important;margin-top:14px!important;font-size:14px!important;font-weight:850!important}
+  .sport-footer .arrow{color:#f1c45b!important}
+
+  .broadcast-ticker{max-width:100vw}
+  .ticker-row{min-width:0!important}
+  .ticker-label{position:relative;z-index:3}
+  .ticker-track{animation-duration:34s!important}
+}
+
+@media(max-width:390px){
+  .network-nav-inner a{padding:0 12px!important;font-size:10px!important}
+  .network-section .section-head h2{font-size:33px!important}
+  .score-card{grid-template-columns:64px minmax(0,1fr) auto!important;gap:9px!important;padding:13px!important}
+  .score-card>div b{font-size:15px!important}
+  .sport-card{padding:16px!important}
+}

@@ -1,0 +1,7 @@
+ELITE SPORTS LEAGUES V27 — MOBILE NETWORK POLISH
+
+1. Upload this package over the current Elite Sports Leagues deployment.
+2. Keep the existing production environment variables from V24/V25.
+3. V27 cache-busts styles.css with ?v=27 so mobile browsers receive the new layout immediately.
+4. Verify at phone width: top network nav scrolls horizontally; Today in Elite rows stay separated; sport titles and Enter EBL/ESCR are bright/readable; ticker stays clipped to viewport.
+5. No database migration is required for this visual pass.

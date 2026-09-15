@@ -4,28 +4,26 @@
 </head><body>
 <header class="topbar"><div class="shell nav">
 <a class="brand" href="/"><span class="core-wordmark text-only"><span class="core-name"><b>ELITE SPORTS</b><small>LEAGUES</small></span></span></a>
-<nav class="navlinks"><a href="/">HOME</a><a href="/events.html">LIVE</a><a href="/community.html">COMMUNITY</a><a href="/passport.html">MY PROFILE</a><button class="btn secondary" id="logoutBtn">SIGN OUT</button></nav>
+<nav class="navlinks"><a href="/passport.html">Passport</a><a href="/community.html">Community</a><a href="/events.html">Events</a><button class="btn secondary" id="logoutBtn">Sign out</button></nav>
 </div></header>
-<div class="network-nav"><div class="shell network-nav-inner"><a href="/">HOME</a><a href="/#scores">SCORES</a><a href="/#news">NEWS</a><a href="/#sports">SPORTS</a><a href="/events.html">LIVE</a><a class="active" href="/dashboard.html">MY ELITE</a></div></div><main class="shell dashboard">
+<main class="shell dashboard">
 <section class="dashboard-hero">
-<div class="eyebrow live-pulse">MY ELITE • NETWORK ID ACTIVE</div>
+<div class="eyebrow live-pulse">ELITE CORE ONLINE</div>
 <h1 id="hello">Welcome to Elite.</h1>
-<p class="muted">One identity across every Elite sport. Follow your careers, enter your leagues, and build a legacy that lives across the network.</p>
+<p class="muted">Your careers. Your history. Your sports universe.</p>
 <div class="hub-actions"><a class="btn secondary" href="/passport.html">Career Passport</a><a class="btn secondary" href="/community.html">Community</a><a class="btn secondary" href="/events.html">Live Events</a></div>
 </section>
 
 <div id="verifyNotice" class="elite-notice hidden"><b>Verify your email to enter sport worlds.</b><span>Your Core account works now, but sport handoff stays locked until verification is complete.</span><a class="btn" href="/verify.html">Verify Email</a></div>
 
 <section class="section"><div class="section-head"><div><div class="eyebrow">YOUR ELITE IDENTITY</div><h2 id="displayName">Loading…</h2></div><span id="accountBadge" class="tag live">CONNECTED</span></div>
-<div class="kpi-row"><div class="kpi"><b id="legacy">0</b><span>LEGACY POINTS</span></div><div class="kpi"><b id="careers">0</b><span>ACTIVE CAREERS</span></div><div class="kpi"><b id="friends">0</b><span>ELITE FRIENDS</span></div><div class="kpi"><b id="notifications">0</b><span>UNREAD</span></div></div></section>
+<div class="kpi-row"><div class="kpi"><b id="legacy">0</b><span>Legacy</span></div><div class="kpi"><b id="careers">0</b><span>Careers</span></div><div class="kpi"><b id="friends">0</b><span>Friends</span></div><div class="kpi"><b id="notifications">0</b><span>Notifications</span></div></div></section>
 
 <section class="section"><div class="section-head"><div><div class="eyebrow">CHOOSE YOUR ARENA</div><h2>Your Sport Worlds</h2></div><p>One account. Separate careers.</p></div>
 <div id="sportGrid" class="grid"><div class="card"><p class="muted">Loading Elite network…</p></div></div></section>
 
-<section class="section"><div class="section-head"><div><div class="eyebrow">CAREER CENTER</div><h2>Your Active Careers</h2></div><a class="network-link" href="/passport.html">FULL CAREER PASSPORT →</a></div><div id="careerGrid" class="career-grid"><div class="card"><p class="muted">Loading careers…</p></div></div></section>
-
 <section class="section"><div class="two-col">
-<div class="card glass"><div class="eyebrow">ELITE WIRE</div><h2>Network News</h2><div id="feed"><p class="muted">Loading news…</p></div></div>
+<div class="card glass"><div class="eyebrow">NETWORK FEED</div><h2>Across Elite</h2><div id="feed"><p class="muted">Loading activity…</p></div></div>
 <div class="card legacy-banner"><div class="eyebrow">TROPHY ROOM</div><h2>Your Legacy</h2><div id="honors"><p class="muted">Your first trophy is waiting.</p></div></div>
 </div></section>
 </main>
@@ -57,20 +55,17 @@ async function boot(){
  if(!verified) verifyNotice.classList.remove('hidden');
  const d=await api('/api/dashboard');
  legacy.textContent=d.legacy?.points ?? d.user?.legacy_points ?? u.legacy_points ?? 0;
- careers.textContent=d.counts?.active_careers ?? d.careers?.filter(c=>c.status==='ACTIVE').length ?? 0;
+ careers.textContent=d.careers?.length ?? d.counts?.careers ?? 0;
  friends.textContent=d.counts?.friends ?? d.friends_count ?? 0;
- notifications.textContent=d.counts?.unread_notifications ?? d.counts?.notifications ?? d.notification_count ?? 0;
+ notifications.textContent=d.counts?.notifications ?? d.notification_count ?? 0;
  const sports=d.sports||[];
  sportGrid.innerHTML=sports.map(s=>{
-  const slug=s.slug||'sport', status=(s.status||'DEVELOPMENT').toUpperCase(), launchable=status==='LIVE'||status==='ALPHA';
-  const label=slug==='baseball'?'ENTER EBL':slug==='racing'?'ENTER ESCR':'ENTER SPORT';
-  const action=launchable?`<button class="btn" data-enter="${slug}" onclick="enterSport('${slug}')">${label}</button>`:`<button class="btn secondary" disabled>COMING SOON</button>`;
-  return `<article class="card sport-card world-card world-${slug}"><img class="league-logo" src="/${sportLogo(slug)}" alt=""><h3>${s.name||slug}</h3><p>${s.summary||'Build a new Elite career.'}</p><span class="tag ${launchable?'live':''}">${status}</span><div class="sport-footer">${action}<span class="arrow">→</span></div></article>`
+  const slug=s.slug||'sport', live=(s.status||'').toUpperCase()==='LIVE'||slug==='baseball';
+  const action=live?`<button class="btn" data-enter="${slug}" onclick="enterSport('${slug}')">${slug==='baseball'?'ENTER EBL':'ENTER SPORT'}</button>`:`<button class="btn secondary" disabled>COMING SOON</button>`;
+  return `<article class="card sport-card world-card world-${slug}"><img class="league-logo" src="/${sportLogo(slug)}" alt=""><h3>${s.name||slug}</h3><p>${s.summary||'Build a new Elite career.'}</p><span class="tag ${live?'live':''}">${live?'LIVE':'IN DEVELOPMENT'}</span><div class="sport-footer">${action}<span class="arrow">→</span></div></article>`
  }).join('')||`<article class="card sport-card world-card world-baseball"><img class="league-logo" src="https://elite-baseball.com/assets/ebl_logo.png" alt="Elite Baseball League"><h3>Elite Baseball League</h3><p>Build a career. Join a franchise. Write baseball history.</p><span class="tag live">LIVE</span><div class="sport-footer"><button class="btn" data-enter="baseball" onclick="enterSport('baseball')">ENTER EBL</button><span class="arrow">→</span></div></article>`;
- const cs=d.careers||[];
- careerGrid.innerHTML=cs.filter(c=>c.status==='ACTIVE').map(c=>`<article class="card career-card"><div class="career-sport">${c.icon||'★'} ${c.sport_name||'Elite'}</div><h3>${c.display_name||'Elite Athlete'}</h3><p>${c.team_name||'Independent'} • ${c.role_name||'Competitor'}</p><div class="career-meta"><span>${c.season_label||'Active Career'}</span><span class="tag live">ACTIVE</span></div></article>`).join('')||'<article class="card career-card"><div class="career-sport">ELITE SPORTS LEAGUES</div><h3>Your first career starts here.</h3><p>Choose an available sport world above and begin building your legacy.</p></article>';
- const items=d.news?.length?d.news:(d.activity||[]);
- feed.innerHTML=items.slice(0,7).map(x=>`<div class="feed-item"><div class="dot"></div><div><b>${x.title||x.headline||x.type||'Elite Update'}</b><p>${x.summary||x.description||x.body||''}</p><small class="wire-tag">${x.sport_name||'ELITE NETWORK'}</small></div></div>`).join('')||'<p class="muted">Your Elite story starts here.</p>';
+ const items=d.activity||d.news||[];
+ feed.innerHTML=items.slice(0,7).map(x=>`<div class="feed-item"><div class="dot"></div><div><b>${x.title||x.type||'Elite Update'}</b><p>${x.summary||x.body||''}</p></div></div>`).join('')||'<p class="muted">Your Elite story starts here.</p>';
  const hs=d.honors||d.trophies||[];
  honors.innerHTML=hs.slice(0,5).map(h=>`<div class="trophy"><div class="icon">🏆</div><div><b>${h.title||h.name||'Elite Honor'}</b><div class="muted">${h.sport_name||''}</div></div></div>`).join('')||'<p class="muted">Championships, awards and records will live here permanently.</p>';
 }
