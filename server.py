@@ -32,7 +32,6 @@ EMAIL_PROVIDER = os.environ.get("ELITE_EMAIL_PROVIDER","dev").lower()
 EMAIL_FROM = os.environ.get("ELITE_EMAIL_FROM","Elite Sports <noreply@example.com>")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY","")
 APP_BASE_URL = os.environ.get("ELITE_APP_BASE_URL","http://localhost:8080").rstrip("/")
-ELITE_BASEBALL_BRIDGE_URL = os.environ.get("ELITE_BASEBALL_BRIDGE_URL","").rstrip("/")
 CSRF_COOKIE = "elite_csrf"
 RATE_WINDOW_SECONDS = 60
 RATE_LIMITS = {"LOGIN":12,"REGISTER":6,"RESET_REQUEST":6,"VERIFY_RESEND":5}
@@ -873,54 +872,6 @@ def init_community_schema():
       ON notifications(user_id,is_read,created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_messages_conversation
       ON messages(conversation_id,created_at DESC);
-    CREATE TABLE IF NOT EXISTS career_passports(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      sport_id INTEGER NOT NULL,
-      external_career_id TEXT NOT NULL,
-      athlete_name TEXT NOT NULL,
-      organization_name TEXT,
-      role_name TEXT,
-      current_season TEXT,
-      career_status TEXT NOT NULL DEFAULT 'ACTIVE',
-      headline TEXT,
-      profile_path TEXT,
-      started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      retired_at TEXT,
-      UNIQUE(user_id,sport_id,external_career_id),
-      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-      FOREIGN KEY(sport_id) REFERENCES sports(id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS passport_stats(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      passport_id INTEGER NOT NULL,
-      stat_key TEXT NOT NULL,
-      stat_label TEXT NOT NULL,
-      stat_value TEXT NOT NULL,
-      sort_order INTEGER NOT NULL DEFAULT 100,
-      UNIQUE(passport_id,stat_key),
-      FOREIGN KEY(passport_id) REFERENCES career_passports(id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE IF NOT EXISTS honors(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      sport_id INTEGER NOT NULL,
-      honor_type TEXT NOT NULL,
-      title TEXT NOT NULL,
-      season_label TEXT,
-      event_label TEXT,
-      awarded_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      is_major INTEGER NOT NULL DEFAULT 0,
-      external_ref TEXT,
-      UNIQUE(user_id,sport_id,honor_type,title,season_label),
-      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
-      FOREIGN KEY(sport_id) REFERENCES sports(id) ON DELETE CASCADE
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_passports_user ON career_passports(user_id,career_status);
-    CREATE INDEX IF NOT EXISTS idx_honors_user ON honors(user_id,is_major,awarded_at DESC);
     """)
     c.commit()
     c.close()
@@ -962,19 +913,6 @@ def delete_session(token):
     c.execute("DELETE FROM sessions WHERE token_hash=?", (token_hash(token),))
     c.commit()
     c.close()
-
-def fetch_json_url(url, timeout=5):
-    try:
-        req=urllib.request.Request(
-            url,
-            headers={"Accept":"application/json","User-Agent":"Elite-Sports-Core/1.0"}
-        )
-        with urllib.request.urlopen(req,timeout=timeout) as resp:
-            raw=resp.read(262144)
-        data=json.loads(raw.decode("utf-8"))
-        return data if isinstance(data,dict) else None
-    except Exception:
-        return None
 
 def rows(sql, args=()):
     c = conn()
@@ -1051,7 +989,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length",str(len(body)))
         self.send_header("Cache-Control","no-store")
         if extra_headers:
-            for k,v in extra_headers.items():
+            header_items = extra_headers.items() if hasattr(extra_headers, "items") else extra_headers
+            for k,v in header_items:
                 self.send_header(k,v)
         self.end_headers()
         self.wfile.write(body)
@@ -1437,82 +1376,6 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_json({"error":err},409 if err=="EXTERNAL_ACCOUNT_ALREADY_LINKED" else 400)
 
             return self.send_json({"ok":True,"external_account":link})
-
-        if p == "/api/integrations/baseball/sync":
-            user=self.require_user()
-            if not user:
-                return
-            if not ELITE_BASEBALL_BRIDGE_URL:
-                return self.send_json({"error":"BASEBALL_BRIDGE_NOT_CONFIGURED"},503)
-
-            link=get_sport_link(user["id"],"baseball")
-            if not link or not link.get("external_username"):
-                return self.send_json({"error":"BASEBALL_ACCOUNT_NOT_LINKED"},409)
-
-            ext_username=str(link["external_username"]).strip()
-            url=ELITE_BASEBALL_BRIDGE_URL+"/api/elite-bridge/profile/"+urllib.parse.quote(ext_username,safe="")
-            remote=fetch_json_url(url)
-            if not remote:
-                return self.send_json({"error":"BASEBALL_BRIDGE_UNAVAILABLE"},502)
-
-            identity=remote.get("identity") or {}
-            passport=remote.get("career_passport") or {}
-            if str(identity.get("sport_user_id") or "") != str(link.get("external_user_id") or ""):
-                return self.send_json({"error":"BASEBALL_IDENTITY_MISMATCH"},409)
-
-            sport=one("SELECT id FROM sports WHERE slug='baseball'")
-            players=passport.get("players") or []
-            primary=next((x for x in players if x.get("active")), players[0] if players else None)
-
-            if primary and sport:
-                c=conn()
-                try:
-                    external_career_id=str(primary.get("id") or "")
-                    team=primary.get("team_name") or "Free Agent"
-                    role=primary.get("primary_pos") or "PLAYER"
-                    status="ACTIVE" if primary.get("active") else "ALUMNI"
-                    headline=role+" • "+team
-                    c.execute("""INSERT INTO career_passports(
-                                  user_id,sport_id,external_career_id,athlete_name,
-                                  organization_name,role_name,current_season,career_status,
-                                  headline,profile_path
-                                ) VALUES(?,?,?,?,?,?,?,?,?,?)
-                                ON CONFLICT(user_id,sport_id,external_career_id) DO UPDATE SET
-                                  athlete_name=excluded.athlete_name,
-                                  organization_name=excluded.organization_name,
-                                  role_name=excluded.role_name,
-                                  current_season=excluded.current_season,
-                                  career_status=excluded.career_status,
-                                  headline=excluded.headline,
-                                  profile_path=excluded.profile_path""",
-                              (user["id"],sport["id"],external_career_id,
-                               primary.get("name") or ext_username,team,role,
-                               str((primary.get("career") or {}).get("current_season") or ""),
-                               status,headline,primary.get("profile_path") or ""))
-                    cp=c.execute("""SELECT id FROM career_passports
-                                    WHERE user_id=? AND sport_id=? AND external_career_id=?""",
-                                 (user["id"],sport["id"],external_career_id)).fetchone()
-                    summary=[
-                        ("seasons","Seasons",passport.get("completed_seasons",0),1),
-                        ("awards","Awards",passport.get("awards",0),2),
-                        ("championships","Championships",passport.get("championship_count",0),3)
-                    ]
-                    for key,label,value,order in summary:
-                        c.execute("""INSERT INTO passport_stats(passport_id,stat_key,stat_label,stat_value,sort_order)
-                                     VALUES(?,?,?,?,?)
-                                     ON CONFLICT(passport_id,stat_key) DO UPDATE SET
-                                       stat_label=excluded.stat_label,
-                                       stat_value=excluded.stat_value,
-                                       sort_order=excluded.sort_order""",
-                                  (cp["id"],key,label,str(value or 0),order))
-                    c.execute("""UPDATE sport_account_links
-                                 SET last_synced_at=CURRENT_TIMESTAMP
-                                 WHERE user_id=? AND sport_id=?""",(user["id"],sport["id"]))
-                    c.commit()
-                finally:
-                    c.close()
-
-            return self.send_json({"ok":True,"sport":"baseball","career_passport":passport})
 
         if p == "/api/auth/logout":
             token = self.cookies().get(SESSION_COOKIE)
