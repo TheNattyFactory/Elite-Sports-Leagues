@@ -1,15 +1,100 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Verify Email | Elite Sports</title><link rel="stylesheet" href="styles.css"></head>
-<body><main style="max-width:650px;margin:60px auto;padding:24px">
-<span class="eyebrow">ELITE ACCOUNT</span><h1>Verify your email</h1>
-<p>Enter the verification token from your Elite Sports email. In development, you can retrieve it from the local email outbox.</p>
-<label>Verification token<input id="token" style="width:100%;padding:12px;margin:8px 0 14px"></label>
-<button class="btn primary" onclick="verify()">Verify Account</button>
-<button class="btn secondary" onclick="resend()">Resend</button>
-<p id="msg"></p><div id="dev"></div>
-<script>function getCsrf(){const m=document.cookie.match(/(?:^|;\\s*)elite_csrf=([^;]+)/);return m?decodeURIComponent(m[1]):''}\n
-async function post(path,body){const r=await fetch(path,{method:"POST",headers:{"Content-Type":"application/json",...(getCsrf()?{"X-CSRF-Token":getCsrf()}:{})},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.error||"Request failed");return d}
-async function verify(){try{await post("/api/auth/verify-email",{token:token.value});msg.textContent="Email verified. Your Elite account is ready.";setTimeout(()=>location.href="/dashboard.html",500)}catch(e){msg.textContent=e.message}}
-async function resend(){try{const d=await post("/api/auth/resend-verification",{});msg.textContent="Verification sent.";if(d.dev_verification_token){token.value=d.dev_verification_token;dev.textContent="Development token loaded automatically."}}catch(e){msg.textContent=e.message}}
-(async()=>{try{const r=await fetch("/api/dev/email-outbox");if(r.ok){const d=await r.json();const x=d.messages.find(m=>m.email_type==="VERIFY_EMAIL");if(x){token.value=x.token;dev.textContent="Development mode: latest verification token loaded.";}}}catch{}})();
-</script></main></body></html>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Verify Email | Elite Sports</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main style="max-width:650px;margin:60px auto;padding:24px">
+  <span class="eyebrow">ELITE ACCOUNT</span>
+  <h1>Verify your email</h1>
+  <p id="intro">Open the verification link from your Elite Sports email, then confirm below to activate your account.</p>
+
+  <div id="ready" hidden>
+    <p><strong>Your verification link is ready.</strong></p>
+    <button class="btn primary" id="verifyBtn" type="button">Verify Account</button>
+  </div>
+
+  <div id="missing" hidden>
+    <p>This page needs a verification token from your email link.</p>
+  </div>
+
+  <button class="btn secondary" id="resendBtn" type="button">Resend Verification Email</button>
+  <p id="msg" role="status" aria-live="polite"></p>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+const verifyToken = (params.get('token') || '').trim();
+const ready = document.getElementById('ready');
+const missing = document.getElementById('missing');
+const msg = document.getElementById('msg');
+const verifyBtn = document.getElementById('verifyBtn');
+const resendBtn = document.getElementById('resendBtn');
+
+function getCsrf(){
+  const m = document.cookie.match(/(?:^|;\s*)elite_csrf=([^;]+)/);
+  return m ? decodeURIComponent(m[1]) : '';
+}
+
+async function post(path, body, useCsrf=false){
+  const headers = {'Content-Type':'application/json'};
+  if(useCsrf){
+    const csrf = getCsrf();
+    if(csrf) headers['X-CSRF-Token'] = csrf;
+  }
+  const r = await fetch(path, {
+    method:'POST',
+    headers,
+    credentials:'same-origin',
+    body:JSON.stringify(body || {})
+  });
+  let d = {};
+  try { d = await r.json(); } catch (_) {}
+  if(!r.ok) throw new Error(d.error || 'Request failed');
+  return d;
+}
+
+if(verifyToken){
+  ready.hidden = false;
+} else {
+  missing.hidden = false;
+}
+
+verifyBtn.addEventListener('click', async () => {
+  if(!verifyToken) return;
+  verifyBtn.disabled = true;
+  msg.textContent = 'Verifying your account…';
+  try{
+    await post('/api/auth/verify-email', {token: verifyToken});
+    msg.textContent = 'Email verified. Welcome to Elite Sports.';
+    history.replaceState({}, '', '/verify.html');
+    setTimeout(() => location.href = '/dashboard.html', 700);
+  }catch(e){
+    verifyBtn.disabled = false;
+    msg.textContent = e.message === 'INVALID_OR_EXPIRED_TOKEN'
+      ? 'This verification link is invalid or has expired. Tap Resend Verification Email for a new link.'
+      : e.message;
+  }
+});
+
+resendBtn.addEventListener('click', async () => {
+  resendBtn.disabled = true;
+  msg.textContent = 'Sending a new verification email…';
+  try{
+    const d = await post('/api/auth/resend-verification', {}, true);
+    msg.textContent = d.already_verified
+      ? 'Your email is already verified. You can continue to your dashboard.'
+      : 'A new verification email has been sent.';
+  }catch(e){
+    msg.textContent = e.message === 'CSRF_FAILED'
+      ? 'Your sign-in session needs to be refreshed. Sign in again, then resend the verification email.'
+      : e.message;
+  }finally{
+    resendBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
