@@ -1,0 +1,13 @@
+ELITE SPORTS LEAGUES V28 — UNIVERSAL ELITE PROFILES
+
+Upload this package over V27.
+
+V28:
+- Universal cross-sport Elite identity page.
+- Career Passport, Legacy Points, honors, major titles and public activity.
+- Signed-in members can send/accept friend requests and start DMs.
+- Sport-specific athlete links appear when a sport adapter supplies profile_path.
+- Mobile-first profile layout with safe HTML escaping.
+
+No database migration is required.
+The existing V27 server.py already contains the public-profile, friendship and DM endpoints used by V28.

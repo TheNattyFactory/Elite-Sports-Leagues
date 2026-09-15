@@ -2,69 +2,271 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Elite Public Profile</title>
-<link rel="stylesheet" href="styles.css">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06101c">
+<title>Elite Profile | Elite Sports Leagues</title>
+<link rel="stylesheet" href="styles.css?v=28">
 <style>
-body{padding:24px}
-main{max-width:1100px;margin:auto}
-.hero{padding:28px;border:1px solid var(--line);border-radius:22px;background:var(--panel);margin-bottom:20px}
-.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
-.card{padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
-.career{padding:14px 0;border-top:1px solid var(--line)}
-.honor,.activity{padding:12px 0;border-top:1px solid var(--line)}
-.tag{display:inline-block;padding:5px 9px;border:1px solid var(--line);border-radius:999px;font-size:.75rem}
-.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.stat{padding:7px 9px;border-radius:9px;background:#081522;font-size:.8rem}
-@media(max-width:800px){.grid{grid-template-columns:1fr}}
+:root{--profile-gold:#f3bd4f;--profile-gold2:#ffd66f;--profile-bg:#050c15;--profile-panel:#0b1725;--profile-panel2:#101d2d;--profile-line:#24354a;--profile-text:#f4f7fb;--profile-muted:#9aa8bb}
+*{box-sizing:border-box}
+body{margin:0;padding:0;background:var(--profile-bg);color:var(--profile-text)}
+.profile-shell{max-width:1180px;margin:0 auto;padding:0 20px 72px}
+.profile-topbar{position:sticky;top:0;z-index:30;background:rgba(5,12,21,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--profile-line)}
+.profile-topbar-inner{max-width:1180px;margin:auto;min-height:78px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.profile-brand{text-decoration:none;color:#fff;font-weight:950;letter-spacing:.14em;line-height:1.05;font-size:1rem}
+.profile-brand small{display:block;color:var(--profile-gold);letter-spacing:.3em;font-size:.62rem;margin-top:6px}
+.profile-nav{display:flex;align-items:center;gap:8px}
+.profile-nav a{color:#cbd5e3;text-decoration:none;font-weight:850;font-size:.85rem;padding:10px 12px;border-radius:10px}
+.profile-nav a:hover{background:#132033;color:#fff}
+.profile-banner{margin-top:24px;min-height:260px;border:1px solid #2b3d54;border-radius:28px;overflow:hidden;position:relative;background:
+ radial-gradient(circle at 78% 20%,rgba(243,189,79,.18),transparent 27%),
+ radial-gradient(circle at 18% 10%,rgba(37,99,235,.24),transparent 30%),
+ linear-gradient(135deg,#101d2e 0%,#08121f 58%,#15121a 100%)}
+.profile-banner:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(to bottom,#000,transparent)}
+.profile-identity{position:relative;z-index:2;min-height:260px;padding:38px;display:flex;align-items:flex-end;gap:24px}
+.profile-avatar{width:126px;height:126px;flex:0 0 126px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#20344d,#0b1624);border:4px solid var(--profile-gold);box-shadow:0 10px 35px rgba(0,0,0,.4);font-size:2.45rem;font-weight:950}
+.profile-main{min-width:0;flex:1}
+.profile-kicker{color:var(--profile-gold);font-size:.78rem;font-weight:950;letter-spacing:.22em;text-transform:uppercase}
+.profile-main h1{font-size:clamp(2.2rem,6vw,4.4rem);line-height:.98;margin:9px 0 7px;letter-spacing:-.045em}
+.profile-handle{font-size:1.05rem;color:#b9c5d4;font-weight:750}
+.profile-bio{max-width:720px;color:#d7deea;font-size:1rem;line-height:1.55;margin:14px 0 0}
+.profile-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.pbtn{border:0;border-radius:12px;padding:12px 17px;font-weight:950;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:.88rem}
+.pbtn.gold{background:linear-gradient(135deg,var(--profile-gold2),var(--profile-gold));color:#111827}
+.pbtn.dark{background:#17263a;color:#fff;border:1px solid #30435b}
+.pbtn:disabled{opacity:.55;cursor:default}
+.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 28px}
+.profile-stat{border:1px solid var(--profile-line);background:linear-gradient(180deg,#0d1928,#09131f);border-radius:18px;padding:18px}
+.profile-stat strong{display:block;font-size:1.55rem;line-height:1;color:#fff}
+.profile-stat span{display:block;color:var(--profile-muted);font-weight:750;font-size:.78rem;margin-top:8px;text-transform:uppercase;letter-spacing:.08em}
+.profile-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.75fr);gap:20px}
+.profile-card{border:1px solid var(--profile-line);background:linear-gradient(180deg,var(--profile-panel),#08131f);border-radius:22px;overflow:hidden}
+.profile-card-head{padding:20px 22px;border-bottom:1px solid var(--profile-line);display:flex;align-items:end;justify-content:space-between;gap:12px}
+.profile-card-head h2{margin:0;font-size:1.2rem}
+.profile-card-head span{color:var(--profile-muted);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.passport-list{padding:10px}
+.passport{position:relative;padding:20px;border-radius:17px;border:1px solid transparent;display:grid;grid-template-columns:54px 1fr auto;gap:15px;align-items:center}
+.passport+.passport{margin-top:8px}
+.passport:hover{background:#101e2e;border-color:#263a51}
+.passport-icon{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;background:#15263a;font-size:1.65rem}
+.passport-sport{font-size:.72rem;color:var(--profile-gold);font-weight:950;letter-spacing:.1em;text-transform:uppercase}
+.passport h3{margin:4px 0;font-size:1.15rem}
+.passport-meta{color:var(--profile-muted);font-size:.87rem;line-height:1.45}
+.passport-stats{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.passport-stat{background:#07111d;border:1px solid #20334a;border-radius:9px;padding:6px 8px;color:#aebbd0;font-size:.72rem}
+.passport-stat b{color:#fff;margin-right:3px}
+.passport-link{white-space:nowrap;color:var(--profile-gold);font-weight:950;text-decoration:none;font-size:.82rem}
+.status-pill{display:inline-flex;margin-left:7px;padding:3px 7px;border-radius:999px;background:#0d3a2b;color:#6ee7a8;font-size:.62rem;font-weight:950;vertical-align:2px}
+.trophy-list,.history-list{padding:8px 18px}
+.trophy,.history-item{padding:15px 4px;border-bottom:1px solid #1d2d40}
+.trophy:last-child,.history-item:last-child{border-bottom:0}
+.trophy-title,.history-title{font-weight:900}
+.trophy-meta,.history-meta{color:var(--profile-muted);font-size:.8rem;margin-top:5px;line-height:1.45}
+.trophy.major .trophy-title{color:var(--profile-gold2)}
+.history-card{margin-top:20px}
+.empty{padding:28px 22px;color:var(--profile-muted);text-align:center}
+.member-badge{display:inline-flex;margin-top:12px;padding:6px 10px;border-radius:999px;background:rgba(243,189,79,.11);border:1px solid rgba(243,189,79,.32);color:#ffd878;font-size:.72rem;font-weight:900}
+.modal-backdrop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-backdrop.open{display:flex}
+.message-modal{width:min(520px,100%);background:#0b1725;border:1px solid #2a3e56;border-radius:22px;padding:22px}
+.message-modal h2{margin:0 0 6px}.message-modal p{color:var(--profile-muted);margin:0 0 15px}
+.message-modal textarea{width:100%;min-height:130px;resize:vertical;border:1px solid #31465f;background:#06101b;color:#fff;border-radius:12px;padding:13px;font:inherit}
+.message-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);z-index:100;background:#f5c354;color:#111827;padding:11px 16px;border-radius:999px;font-weight:900;opacity:0;pointer-events:none;transition:.2s}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:800px){
+ .profile-topbar-inner{min-height:70px}.profile-nav a:not(:last-child){display:none}
+ .profile-shell{padding:0 14px 58px}.profile-banner{margin-top:14px;border-radius:22px;min-height:0}
+ .profile-identity{min-height:0;padding:26px 20px 22px;display:block;text-align:center}
+ .profile-avatar{width:96px;height:96px;margin:0 auto 16px;flex-basis:96px;font-size:1.9rem}
+ .profile-main h1{font-size:2.45rem}.profile-bio{font-size:.92rem}
+ .profile-actions{justify-content:center}.pbtn{flex:1;min-width:130px}
+ .profile-stats{grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+ .profile-stat{padding:15px}.profile-stat strong{font-size:1.35rem}
+ .profile-layout{grid-template-columns:1fr}.passport{grid-template-columns:48px 1fr;padding:15px 12px}
+ .passport-icon{width:48px;height:48px}.passport-link{grid-column:2;margin-top:3px}
+ .profile-card-head{padding:18px}.trophy-list,.history-list{padding:6px 14px}
+}
 </style>
 </head>
 <body>
-<main>
-<div id="hero" class="hero">Loading Elite profile...</div>
-<div class="grid">
-  <section class="card"><h2>Career Passport</h2><div id="careers"></div></section>
-  <section class="card"><h2>Trophy Room</h2><div id="honors"></div></section>
-</div>
-<section class="card" style="margin-top:20px"><h2>Elite History</h2><div id="activity"></div></section>
-<p><a class="btn secondary" href="/">← Elite Sports Hub</a></p>
+<header class="profile-topbar">
+  <div class="profile-topbar-inner">
+    <a class="profile-brand" href="/">ELITE SPORTS<small>LEAGUES</small></a>
+    <nav class="profile-nav">
+      <a href="/">HOME</a><a href="/#sports">SPORTS</a><a href="/dashboard.html">MY ELITE</a>
+    </nav>
+  </div>
+</header>
+
+<main class="profile-shell">
+  <section id="profileBanner" class="profile-banner">
+    <div class="profile-identity">
+      <div id="avatar" class="profile-avatar">EL</div>
+      <div class="profile-main">
+        <div class="profile-kicker">Elite Athlete Profile</div>
+        <h1 id="displayName">Loading profile…</h1>
+        <div id="handle" class="profile-handle"></div>
+        <div id="memberBadge"></div>
+        <p id="bio" class="profile-bio"></p>
+        <div id="profileActions" class="profile-actions"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-stats">
+    <div class="profile-stat"><strong id="legacyStat">—</strong><span>Legacy Points</span></div>
+    <div class="profile-stat"><strong id="careerStat">—</strong><span>Sport Careers</span></div>
+    <div class="profile-stat"><strong id="honorStat">—</strong><span>Honors</span></div>
+    <div class="profile-stat"><strong id="majorStat">—</strong><span>Major Titles</span></div>
+  </section>
+
+  <div class="profile-layout">
+    <section class="profile-card">
+      <div class="profile-card-head"><h2>Career Passport</h2><span>Every sport. One history.</span></div>
+      <div id="careers" class="passport-list"><div class="empty">Loading careers…</div></div>
+    </section>
+
+    <aside class="profile-card">
+      <div class="profile-card-head"><h2>Trophy Room</h2><span>Elite honors</span></div>
+      <div id="honors" class="trophy-list"><div class="empty">Loading honors…</div></div>
+    </aside>
+  </div>
+
+  <section class="profile-card history-card">
+    <div class="profile-card-head"><h2>Elite History</h2><span>Career timeline</span></div>
+    <div id="activity" class="history-list"><div class="empty">Loading history…</div></div>
+  </section>
 </main>
+
+<div id="messageBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="message-modal">
+    <h2>Send Elite Message</h2>
+    <p id="messageTo"></p>
+    <textarea id="messageText" maxlength="2000" placeholder="Write a message…"></textarea>
+    <div class="message-actions">
+      <button class="pbtn dark" id="cancelMessage">Cancel</button>
+      <button class="pbtn gold" id="sendMessage">Send Message</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
 <script>
+const $=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
-const username=params.get("u")||"t-money";
-(async()=>{
-  const hero=document.getElementById("hero");
+const username=(params.get("u")||"").trim();
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function initials(name){return String(name||"Elite").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()}
+function fmtDate(v){if(!v)return ""; const d=new Date(v); return isNaN(d)?esc(v):d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+async function api(path,options={}){const r=await fetch(path,{credentials:"same-origin",...options,headers:{"Content-Type":"application/json",...(options.headers||{})}});let d={};try{d=await r.json()}catch{};if(!r.ok)throw Object.assign(new Error(d.error||"REQUEST_FAILED"),{status:r.status,data:d});return d}
+
+let profileData=null, me=null, friendRecord=null;
+
+function renderProfile(data){
+  profileData=data; const p=data.profile, passports=data.passports||[], honors=data.honors||[], activity=data.activity||[];
+  document.title=`${p.display_name} | Elite Sports`;
+  $("displayName").textContent=p.display_name;
+  $("handle").textContent=`@${p.username}`;
+  $("avatar").textContent=initials(p.display_name);
+  $("bio").textContent=p.bio||"Building a legacy across the Elite Sports universe.";
+  $("legacyStat").textContent=Number(p.legacy_points||0).toLocaleString();
+  $("careerStat").textContent=passports.length;
+  $("honorStat").textContent=honors.length;
+  $("majorStat").textContent=honors.filter(h=>Number(h.is_major)===1).length;
+  $("memberBadge").innerHTML=`<span class="member-badge">${p.banner_label?esc(p.banner_label)+" • ":""}MEMBER SINCE ${esc(fmtDate(p.member_since))}</span>`;
+
+  $("careers").innerHTML=passports.length?passports.map(c=>{
+    const status=String(c.career_status||"").toUpperCase();
+    const safePath=c.profile_path && (/^\//.test(c.profile_path)||/^https:\/\//i.test(c.profile_path))?c.profile_path:"";
+    return `<article class="passport">
+      <div class="passport-icon">${esc(c.icon||"🏆")}</div>
+      <div>
+        <div class="passport-sport">${esc(c.sport_name||c.sport_slug||"Elite Sport")}${status==="ACTIVE"?'<span class="status-pill">ACTIVE</span>':""}</div>
+        <h3>${esc(c.athlete_name||p.display_name)}</h3>
+        <div class="passport-meta">${esc(c.organization_name||"Independent")}${c.role_name?` • ${esc(c.role_name)}`:""}${c.current_season?` • ${esc(c.current_season)}`:""}</div>
+        ${c.headline?`<div class="passport-meta">${esc(c.headline)}</div>`:""}
+        <div class="passport-stats">${(c.stats||[]).map(s=>`<span class="passport-stat"><b>${esc(s.stat_value)}</b>${esc(s.stat_label)}</span>`).join("")}</div>
+      </div>
+      ${safePath?`<a class="passport-link" href="${esc(safePath)}">VIEW ATHLETE →</a>`:""}
+    </article>`}).join(""):'<div class="empty">No Elite sport careers yet.</div>';
+
+  $("honors").innerHTML=honors.length?honors.map(h=>`<div class="trophy ${Number(h.is_major)===1?"major":""}">
+    <div class="trophy-title">${Number(h.is_major)===1?"🏆":"⭐"} ${esc(h.title)}</div>
+    <div class="trophy-meta">${esc(h.icon||"")} ${esc(h.sport_name||"Elite Sports")}${h.season_label?` • ${esc(h.season_label)}`:""}${h.event_label?` • ${esc(h.event_label)}`:""}</div>
+  </div>`).join(""):'<div class="empty">The trophy room is waiting for its first honor.</div>';
+
+  $("activity").innerHTML=activity.length?activity.map(a=>`<div class="history-item">
+    <div class="history-title">${esc(a.icon||"")} ${esc(a.title)}</div>
+    ${a.description?`<div class="history-meta">${esc(a.description)}</div>`:""}
+    <div class="history-meta">${esc(a.sport_name||"Elite Network")}${a.occurred_at?` • ${esc(fmtDate(a.occurred_at))}`:""}</div>
+  </div>`).join(""):'<div class="empty">No public Elite history yet.</div>';
+}
+
+function renderActions(){
+  const box=$("profileActions"); if(!profileData)return;
+  const target=profileData.profile.username;
+  if(!me){box.innerHTML=`<a class="pbtn gold" href="/login.html">Sign in to Connect</a>`;return}
+  if(String(me.username).toLowerCase()===String(target).toLowerCase()){
+    box.innerHTML=`<a class="pbtn gold" href="/dashboard.html">My Elite Dashboard</a>`;
+    return;
+  }
+  let friendLabel="Add Friend", disabled="";
+  if(friendRecord){
+    if(friendRecord.status==="ACCEPTED"){friendLabel="✓ Friends";disabled="disabled"}
+    else if(friendRecord.status==="PENDING"&&friendRecord.direction==="OUTGOING"){friendLabel="Request Sent";disabled="disabled"}
+    else if(friendRecord.status==="PENDING"&&friendRecord.direction==="INCOMING"){friendLabel="Accept Friend"}
+  }
+  box.innerHTML=`<button id="friendBtn" class="pbtn gold" ${disabled}>${friendLabel}</button><button id="messageBtn" class="pbtn dark">Message</button>`;
+  const fb=$("friendBtn"); if(fb&&!fb.disabled)fb.onclick=handleFriend;
+  $("messageBtn").onclick=openMessage;
+}
+
+async function handleFriend(){
+  const target=profileData.profile.username, btn=$("friendBtn"); btn.disabled=true;
   try{
-    const r=await fetch(`/api/public/profile/${encodeURIComponent(username)}`);
-    const data=await r.json();
-    if(!r.ok){hero.textContent=data.error||"Profile unavailable";return}
-    const p=data.profile;
-    document.title=`${p.display_name} | Elite Sports`;
-    hero.innerHTML=`<span class="eyebrow">ELITE SPORTS PROFILE</span>
-      <h1>${p.display_name}</h1>
-      <p>@${p.username} • Legacy ${p.legacy_points}</p>
-      ${p.banner_label?`<span class="tag">${p.banner_label}</span>`:""}
-      ${p.bio?`<p>${p.bio}</p>`:""}`;
+    if(friendRecord&&friendRecord.status==="PENDING"&&friendRecord.direction==="INCOMING"){
+      await api("/api/community/friend-respond",{method:"POST",body:JSON.stringify({username:target,action:"ACCEPT"})});
+      friendRecord={status:"ACCEPTED",direction:"INCOMING"};toast("Friend request accepted");
+    }else{
+      await api("/api/community/friend-request",{method:"POST",body:JSON.stringify({username:target})});
+      friendRecord={status:"PENDING",direction:"OUTGOING"};toast("Friend request sent");
+    }
+  }catch(e){toast(e.message==="REQUEST_ALREADY_EXISTS"?"Friend request already exists":"Could not update friendship")}
+  renderActions();
+}
+function openMessage(){$("messageTo").textContent=`To @${profileData.profile.username}`;$("messageText").value="";$("messageBackdrop").classList.add("open");$("messageText").focus()}
+function closeMessage(){$("messageBackdrop").classList.remove("open")}
+$("cancelMessage").onclick=closeMessage;
+$("messageBackdrop").onclick=e=>{if(e.target===$("messageBackdrop"))closeMessage()};
+$("sendMessage").onclick=async()=>{
+  const text=$("messageText").value.trim(); if(!text)return toast("Write a message first");
+  const b=$("sendMessage");b.disabled=true;
+  try{const d=await api("/api/community/dm/start",{method:"POST",body:JSON.stringify({username:profileData.profile.username,message:text})});toast("Message sent");closeMessage();setTimeout(()=>location.href=`/community.html?conversation=${encodeURIComponent(d.conversation_id)}`,500)}
+  catch(e){toast("Message could not be sent")}finally{b.disabled=false}
+};
 
-    document.getElementById("careers").innerHTML=(data.passports||[]).map(c=>`
-      <div class="career">
-        <h3>${c.icon||""} ${c.sport_name}</h3>
-        <strong>${c.athlete_name}</strong>
-        <div>${c.organization_name||"Independent"} ${c.role_name?`• ${c.role_name}`:""}</div>
-        <div>${c.current_season||""} • ${c.career_status}</div>
-        <div class="stats">${(c.stats||[]).map(s=>`<span class="stat"><b>${s.stat_value}</b> ${s.stat_label}</span>`).join("")}</div>
-      </div>`).join("") || "<p>No careers yet.</p>";
-
-    document.getElementById("honors").innerHTML=(data.honors||[]).map(h=>`
-      <div class="honor">${h.is_major?"🏆":"⭐"} <strong>${h.title}</strong>
-      <div>${h.icon||""} ${h.sport_name}${h.season_label?` • ${h.season_label}`:""}</div></div>
-    `).join("") || "<p>No honors yet.</p>";
-
-    document.getElementById("activity").innerHTML=(data.activity||[]).map(a=>`
-      <div class="activity"><strong>${a.icon||""} ${a.title}</strong>
-      <div>${a.description||""}</div>
-      <small>${a.occurred_at}</small></div>`).join("") || "<p>No public activity yet.</p>";
-  }catch(e){hero.textContent="Profile unavailable."}
+(async()=>{
+  if(!username){$("displayName").textContent="Profile not found";$("bio").textContent="Choose an Elite member from the network.";return}
+  try{
+    const data=await api(`/api/public/profile/${encodeURIComponent(username)}`);
+    renderProfile(data);
+  }catch(e){
+    $("displayName").textContent=e.status===403?"Private Elite Profile":"Profile not found";
+    $("handle").textContent="";
+    $("bio").textContent=e.status===403?"This member keeps their Elite profile private.":"This Elite identity is unavailable.";
+    $("careers").innerHTML=$("honors").innerHTML=$("activity").innerHTML="";
+    return;
+  }
+  try{
+    const m=await api("/api/me"); me=m.user||m.me||m;
+    if(me&&me.username&&String(me.username).toLowerCase()!==username.toLowerCase()){
+      try{const f=await api("/api/community/friends");friendRecord=(f.friends||[]).find(x=>String(x.username).toLowerCase()===username.toLowerCase())||null}catch{}
+    }
+  }catch{}
+  renderActions();
 })();
 </script>
 </body>
