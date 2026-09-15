@@ -15,7 +15,7 @@ import urllib.request
 import urllib.parse
 
 ROOT = Path(__file__).resolve().parent
-DB_PATH = ROOT / "elite_core.db"
+DB_PATH = Path(os.environ.get("ELITE_DB_PATH", "/data/elite_core.db" if os.environ.get("ELITE_ENV", "development").lower() == "production" else str(ROOT / "elite_core.db")))
 HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT","8080"))
 SESSION_COOKIE = "elite_session"
@@ -223,14 +223,20 @@ def send_transactional_email(user_id,email,email_type,subject,token):
             method="POST",
             headers={
                 "Authorization":f"Bearer {RESEND_API_KEY}",
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                "Accept":"application/json",
+                "User-Agent":"Mozilla/5.0 (compatible; EliteSportsLeagues/1.0; +https://elitesportsleagues.com)"
             }
         )
         try:
             with urllib.request.urlopen(req,timeout=10) as resp:
-                return 200 <= resp.status < 300
+                ok = 200 <= resp.status < 300
+                print(f"EMAIL_DELIVERY SUCCESS type={email_type} provider=resend status={resp.status}" if ok else f"EMAIL_DELIVERY FAILED type={email_type} provider=resend status={resp.status}", flush=True)
+                return ok
         except Exception as exc:
-            security_event(user_id,"EMAIL_DELIVERY_FAILED",{"type":email_type,"error":str(exc)[:200]})
+            detail=str(exc).replace(RESEND_API_KEY,"[REDACTED]")[:200]
+            print(f"EMAIL_DELIVERY FAILED type={email_type} provider=resend detail={detail}", flush=True)
+            security_event(user_id,"EMAIL_DELIVERY_FAILED",{"type":email_type,"error":detail})
             return False
 
     raise RuntimeError(f"Unsupported email provider: {EMAIL_PROVIDER}")
@@ -989,7 +995,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length",str(len(body)))
         self.send_header("Cache-Control","no-store")
         if extra_headers:
-            for k,v in extra_headers.items():
+            items = extra_headers.items() if hasattr(extra_headers, "items") else extra_headers
+            for k,v in items:
                 self.send_header(k,v)
         self.end_headers()
         self.wfile.write(body)

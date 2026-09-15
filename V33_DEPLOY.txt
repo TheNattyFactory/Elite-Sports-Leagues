@@ -1,0 +1,18 @@
+ELITE SPORTS LEAGUES V33 — PERSISTENT CORE
+
+Production database:
+  /data/elite_core.db
+
+Railway volume required:
+  elite-sports-leagues-data mounted at /data
+
+Optional override:
+  ELITE_DB_PATH=/data/elite_core.db
+
+Also preserves the production cookie-header compatibility fix and Resend delivery headers/logging.
+
+After deployment:
+1. Register/verify the natty account once.
+2. Confirm login.
+3. Redeploy again.
+4. Confirm the same account still logs in.
