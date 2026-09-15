@@ -283,3 +283,26 @@ body:after{
 .world-soccer{--sport-bg:radial-gradient(circle at 78% 22%,rgba(123,221,53,.22),transparent 34%)}
 .world-tennis{--sport-bg:radial-gradient(circle at 78% 22%,rgba(181,230,45,.22),transparent 34%)}
 @media(max-width:560px){.league-logo{width:132px;height:98px}}
+
+/* V18 — BRAND ASSET RELIABILITY */
+.core-wordmark{display:flex;align-items:center;gap:10px}
+.core-mark,.hero-core-mark{
+ display:grid;place-items:center;font-weight:1000;color:#07101a;
+ background:linear-gradient(145deg,#fff0a8,#e5a62f 60%,#955b14);
+ border:2px solid #ffe08a;box-shadow:0 7px 22px rgba(240,184,75,.2)
+}
+.core-mark{width:42px;height:42px;border-radius:12px;font-size:24px}
+.core-name{display:grid;line-height:1}.core-name b{font-size:14px;letter-spacing:.11em;color:#fff}.core-name small{font-size:10px;letter-spacing:.35em;color:#e8b34a;margin-top:5px}
+.hero-core-brand{display:flex;align-items:center;gap:18px;margin-bottom:28px;filter:drop-shadow(0 16px 26px rgba(0,0,0,.38))}
+.hero-core-mark{width:94px;height:94px;border-radius:24px;font-size:58px}
+.hero-core-brand>div{display:grid;line-height:.9}
+.hero-core-brand b{font-size:clamp(34px,5vw,62px);letter-spacing:.02em;color:#fff}
+.hero-core-brand strong{font-size:clamp(23px,3.5vw,42px);letter-spacing:.25em;color:#eab348;margin-top:10px}
+.hero-core-brand small{font-size:11px;letter-spacing:.18em;color:#8fa3bd;margin-top:16px;line-height:1.3}
+.world-baseball .league-logo{width:180px;height:130px}
+@media(max-width:560px){
+ .core-name b{font-size:12px}.core-name small{font-size:8px}
+ .hero-core-mark{width:68px;height:68px;font-size:40px;border-radius:18px}
+ .hero-core-brand{gap:12px}
+ .hero-core-brand small{font-size:8px;letter-spacing:.1em}
+}

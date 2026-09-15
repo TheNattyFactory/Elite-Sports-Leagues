@@ -1,0 +1,24 @@
+ELITE SPORTS LEAGUES — V18 BRAND FIX
+
+UPLOAD TO:
+TheNattyFactory/Elite-Sports-Leagues
+
+UPLOAD THESE FILES TO THE REPOSITORY ROOT:
+- index.html
+- styles.css
+
+Replace the existing versions and commit to main.
+Railway will redeploy automatically.
+
+WHAT V18 FIXES:
+1. Removes the two fragile ESL banner image dependencies.
+2. Replaces them with a responsive Core wordmark built directly in HTML/CSS,
+   so there can never be a broken-image icon there again.
+3. Baseball now uses the established EBL logo directly from:
+   https://elite-baseball.com/assets/ebl_logo.png
+4. Keeps the current card layout and Core styling.
+
+DO NOT:
+- create a static folder
+- replace server.py for this patch
+- delete other project files
