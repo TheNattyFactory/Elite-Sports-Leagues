@@ -1,0 +1,21 @@
+EBL ↔ ELITE SPORTS CORE BRIDGE — V1
+
+WHAT THIS BUILD DOES
+- Keeps the existing EBL account/player system intact.
+- Adds GET /api/elite-bridge/profile/<username>.
+- Exposes a safe, public Career Passport adapter for Elite Sports Core.
+- Reuses EBL career history, awards, championships and public player identity.
+- Adds an "Elite Profile" button to EBL member profiles when the hub URL is configured.
+- Does not expose passwords, email addresses, reset tokens or session data.
+- EBL still works standalone if the hub URL is not configured.
+
+RAILWAY ENVIRONMENT VARIABLE
+Set:
+ELITE_HUB_URL=https://YOUR-ELITE-SPORTS-HUB-DOMAIN
+
+Do not include a trailing slash.
+
+NEXT BRIDGE PHASE
+The next phase is signed one-time gateway/SSO consumption from Elite Core into EBL.
+That should use the same shared gateway secret on both services and should only be enabled
+after the deployed Elite Core ticket contract is matched exactly.
