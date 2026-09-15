@@ -223,7 +223,9 @@ def send_transactional_email(user_id,email,email_type,subject,token):
             method="POST",
             headers={
                 "Authorization":f"Bearer {RESEND_API_KEY}",
-                "Content-Type":"application/json"
+                "Content-Type":"application/json",
+                "Accept":"application/json",
+                "User-Agent":"Mozilla/5.0 (compatible; EliteSportsLeagues/1.0; +https://elitesportsleagues.com)"
             }
         )
         try:
@@ -1004,7 +1006,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Length",str(len(body)))
         self.send_header("Cache-Control","no-store")
         if extra_headers:
-            for k,v in extra_headers.items():
+            header_items = extra_headers.items() if hasattr(extra_headers, "items") else extra_headers
+            for k,v in header_items:
                 self.send_header(k,v)
         self.end_headers()
         self.wfile.write(body)
