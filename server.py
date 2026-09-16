@@ -795,6 +795,55 @@ def get_sport_link(user_id, sport_slug):
 def init_community_schema():
     c = conn()
     c.executescript("""
+    CREATE TABLE IF NOT EXISTS career_passports(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      sport_id INTEGER NOT NULL,
+      external_career_id TEXT,
+      athlete_name TEXT NOT NULL,
+      organization_name TEXT,
+      role_name TEXT,
+      current_season TEXT,
+      career_status TEXT NOT NULL DEFAULT 'ACTIVE',
+      headline TEXT,
+      profile_path TEXT,
+      started_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      retired_at TEXT,
+      UNIQUE(user_id,sport_id,external_career_id),
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY(sport_id) REFERENCES sports(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS passport_stats(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      passport_id INTEGER NOT NULL,
+      stat_label TEXT NOT NULL,
+      stat_value TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 100,
+      FOREIGN KEY(passport_id) REFERENCES career_passports(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS honors(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      sport_id INTEGER NOT NULL,
+      honor_type TEXT NOT NULL DEFAULT 'AWARD',
+      title TEXT NOT NULL,
+      season_label TEXT,
+      event_label TEXT,
+      awarded_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      is_major INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY(sport_id) REFERENCES sports(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_passports_user_sport
+      ON career_passports(user_id,sport_id);
+    CREATE INDEX IF NOT EXISTS idx_passport_stats_passport
+      ON passport_stats(passport_id,sort_order,id);
+    CREATE INDEX IF NOT EXISTS idx_honors_user_time
+      ON honors(user_id,awarded_at DESC,id DESC);
+
     CREATE TABLE IF NOT EXISTS friendships(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       requester_id INTEGER NOT NULL,
