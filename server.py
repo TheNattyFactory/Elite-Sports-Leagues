@@ -13,6 +13,7 @@ import base64
 import os
 import urllib.request
 import urllib.parse
+from email.utils import formatdate
 
 ROOT = Path(__file__).resolve().parent
 DB_PATH = Path(os.environ.get("ELITE_DB_PATH", "/data/elite_core.db" if os.environ.get("ELITE_ENV", "development").lower() == "production" else str(ROOT / "elite_core.db")))
@@ -935,11 +936,13 @@ def one(sql, args=()):
 class Handler(BaseHTTPRequestHandler):
     def session_cookie_header(self,token,max_age=SESSION_TTL_SECONDS):
         secure="; Secure" if APP_ENV=="production" else ""
-        return f"{SESSION_COOKIE}={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={max_age}{secure}"
+        expires=formatdate(time.time()+max_age if max_age>0 else 0,usegmt=True)
+        return f"{SESSION_COOKIE}={token}; Path=/; HttpOnly; SameSite=Lax; Max-Age={max_age}; Expires={expires}{secure}"
 
     def csrf_cookie_header(self,token,max_age=SESSION_TTL_SECONDS):
         secure="; Secure" if APP_ENV=="production" else ""
-        return f"{CSRF_COOKIE}={token}; Path=/; SameSite=Lax; Max-Age={max_age}{secure}"
+        expires=formatdate(time.time()+max_age if max_age>0 else 0,usegmt=True)
+        return f"{CSRF_COOKIE}={token}; Path=/; SameSite=Lax; Max-Age={max_age}; Expires={expires}{secure}"
 
     def auth_cookie_headers(self,token):
         csrf=secrets.token_urlsafe(24)
@@ -1688,10 +1691,11 @@ class Handler(BaseHTTPRequestHandler):
             """,(user["id"],))
 
             news = rows("""
-              SELECT hn.id,hn.title,hn.summary,hn.created_at,s.slug sport_slug,s.name sport_name,s.icon
+              SELECT hn.id,hn.headline AS title,hn.summary,hn.published_at AS created_at,
+                     s.slug sport_slug,s.name sport_name,s.icon
               FROM hub_news hn
               LEFT JOIN sports s ON s.id=hn.sport_id
-              ORDER BY hn.created_at DESC,hn.id DESC LIMIT 8
+              ORDER BY hn.published_at DESC,hn.id DESC LIMIT 8
             """)
 
             activity = rows("""
