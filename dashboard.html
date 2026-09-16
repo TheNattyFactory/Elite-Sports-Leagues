@@ -40,10 +40,10 @@ async function enterSport(slug){
  const b=document.querySelector(`[data-enter="${slug}"]`); if(b){b.disabled=true;b.textContent='CONNECTING…'}
  try{
   const j=await api('/api/gateway/enter/'+encodeURIComponent(slug));
-  const url=j.url||j.redirect_url||j.gateway_url;
+  const url=j.entry_url||j.url||j.redirect_url||j.gateway_url;
   if(!url) throw new Error(j.error||'SPORT_NOT_READY');
   location.href=url;
- }catch(e){alert(String(e.message||e).replaceAll('_',' '));if(b){b.disabled=false;b.textContent=slug==='baseball'?'ENTER EBL':'ENTER SPORT'}}
+ }catch(e){alert(String(e.message||e).replaceAll('_',' '));if(b){b.disabled=false;b.textContent=slug==='baseball'?'ENTER EBL':slug==='racing'?'ENTER ESR':'ENTER SPORT'}}
 }
 async function boot(){
  const me=await api('/api/auth/me');
@@ -60,8 +60,8 @@ async function boot(){
  notifications.textContent=d.counts?.notifications ?? d.notification_count ?? 0;
  const sports=d.sports||[];
  sportGrid.innerHTML=sports.map(s=>{
-  const slug=s.slug||'sport', live=(s.status||'').toUpperCase()==='LIVE'||slug==='baseball';
-  const action=live?`<button class="btn" data-enter="${slug}" onclick="enterSport('${slug}')">${slug==='baseball'?'ENTER EBL':'ENTER SPORT'}</button>`:`<button class="btn secondary" disabled>COMING SOON</button>`;
+  const slug=s.slug||'sport', live=(s.status||'').toUpperCase()==='LIVE'||slug==='baseball'||slug==='racing';
+  const action=live?`<button class="btn" data-enter="${slug}" onclick="enterSport('${slug}')">${slug==='baseball'?'ENTER EBL':slug==='racing'?'ENTER ESR':'ENTER SPORT'}</button>`:`<button class="btn secondary" disabled>COMING SOON</button>`;
   return `<article class="card sport-card world-card world-${slug}"><img class="league-logo" src="/${sportLogo(slug)}" alt=""><h3>${s.name||slug}</h3><p>${s.summary||'Build a new Elite career.'}</p><span class="tag ${live?'live':''}">${live?'LIVE':'IN DEVELOPMENT'}</span><div class="sport-footer">${action}<span class="arrow">→</span></div></article>`
  }).join('')||`<article class="card sport-card world-card world-baseball"><img class="league-logo" src="https://elite-baseball.com/assets/ebl_logo.png" alt="Elite Baseball League"><h3>Elite Baseball League</h3><p>Build a career. Join a franchise. Write baseball history.</p><span class="tag live">LIVE</span><div class="sport-footer"><button class="btn" data-enter="baseball" onclick="enterSport('baseball')">ENTER EBL</button><span class="arrow">→</span></div></article>`;
  const items=d.activity||d.news||[];
