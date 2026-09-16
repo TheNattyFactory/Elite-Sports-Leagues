@@ -110,6 +110,21 @@
 
 <footer class="footer"><div class="shell">© 2026 Elite Sports Leagues • Build your legacy.</div></footer>
 <script>
+// Restore an existing Elite session when a signed-in user returns to the public home page.
+// A network/server hiccup must never sign the user out; only a confirmed unauthenticated response does.
+(async function restoreEliteSession(){
+  try{
+    const r=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});
+    if(!r.ok) return;
+    const data=await r.json();
+    if(data && data.user){
+      location.replace('/dashboard.html');
+    }
+  }catch(err){
+    console.debug('Elite session check unavailable',err);
+  }
+})();
+
 async function eliteEnterSport(slug){
   try{
     const auth=await fetch('/api/auth/me',{credentials:'same-origin'});
