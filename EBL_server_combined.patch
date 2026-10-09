@@ -1,0 +1,50 @@
+--- a/server.py
++++ b/server.py
+@@ -36,8 +36,10 @@
+     position_group_for_pos, eligible_roster_slot_groups, available_roster_roles,
+     roster_offer_slot, human_roster_count, roster_capacity_state,
+ )
+ from ebl_db import conn
++import ebl_esl_publisher
++import ebl_elite_account_link
+ from ebl_league import (
+     MIN_ACTIVE_TEAMS,
+     _season_number, _division_labels, ensure_season_membership, active_franchise_ids,
+     set_season_membership, season_division,
+@@ -10693,8 +10695,22 @@
+     def api_get(self,p):
+         u=session_user(self.headers)
+         if p in ("/health","/api/health"):
+             return self.out({"ok":True,"service":"EBL","version":"1.3.0-beta"})
++        if p=="/api/elite/account-proof":
++            au=self.auth()
++            if not au:return
++            c=conn()
++            try:
++                verified=c.execute("SELECT email_verified FROM user_security WHERE user_id=?",(au["id"],)).fetchone()
++            finally:c.close()
++            if not verified or not verified["email_verified"]:
++                return self.out({"error":"EMAIL_VERIFICATION_REQUIRED"},403,{"Cache-Control":"no-store"})
++            try:
++                result=ebl_elite_account_link.issue(au)
++            except (RuntimeError,ValueError):
++                return self.out({"error":"ACCOUNT_LINK_UNAVAILABLE"},503,{"Cache-Control":"no-store"})
++            return self.out(result,200,{"Cache-Control":"no-store","Pragma":"no-cache"})
+         if p=="/api/me":
+             if not u:return self.out({"user":None})
+             c=conn();ent=supporter_entitlement(c,u["id"]);c.close()
+             user=dict(u);user["supporter"]=ent["supporter"];user["support_tier"]=ent["tier"]
+@@ -17614,7 +17630,13 @@
+         discord_bridge_bootstrap()
+     except Exception as e:
+         print(f"DISCORD BRIDGE BOOTSTRAP ERROR: {type(e).__name__}: {str(e)[:200]}")
+     threading.Thread(target=discord_bridge_worker,daemon=True,name="EBL-DiscordBridge").start()
++    # A missing optional publishing configuration must never take EBL offline.
++    try:
++        if ebl_esl_publisher.configured():
++            threading.Thread(target=ebl_esl_publisher.worker,args=(conn,),daemon=True,name="EBL-ESL-Network").start()
++    except Exception as exc:
++        print(f"ESL SPORTS NETWORK: publisher disabled ({type(exc).__name__})", flush=True)
+     threading.Thread(target=auto_advance_worker,args=(port,),daemon=True,name="EBL-AutoAdvance").start()
+     httpd.serve_forever()
+ 

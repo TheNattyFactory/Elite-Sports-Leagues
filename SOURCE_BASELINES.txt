@@ -1,0 +1,4 @@
+Patch source baselines are historical Google Drive snapshots, NOT current GitHub main.
+ESL: September 16 2026 Drive server.py; Railway production SHA last observed 4bafa5b91e74cc48b5f1db1ca7632922ccfad529
+EBL: October 6 2026 Drive server.py; Railway production SHA last observed a6c187e1d9bbd7f55ffc2c89787640c1224fcb27 (October 8)
+Only apply to reviewed current repository branches. Do not overwrite newer source, player DB, or static asset directories.

@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Elite Sports Leagues • Step Into Elite</title><link rel="icon" href="/elite-crest.svg">
 <meta name="description" content="Build your legacy across distinct sports worlds in Elite Sports Leagues.">
-<link rel="stylesheet" href="/styles.css?v=27">
+<link rel="stylesheet" href="/styles.css?v=esn1">
 </head>
 <body>
 <header class="topbar">
@@ -13,14 +13,14 @@
 <span class="core-name"><b>ELITE SPORTS</b><small>LEAGUES</small></span>
 </span></a>
     <nav class="navlinks">
-      <a href="#sports">Sports</a><a href="#legacy">Legacy</a><a href="#community">Community</a>
+      <a href="#sports">Sports</a><a href="/hall-of-fame.html">Hall of Fame</a><a href="#community">Community</a>
       <a class="keep" href="/login.html">Sign in</a>
       <a class="btn keep" href="/register.html">Create account</a>
     </nav>
   </div>
 </header><div class="network-nav"><div class="shell network-nav-inner">
 <a class="active" href="/">HOME</a><a href="/events.html">SCORES</a><a href="#elite-news">NEWS</a>
-<a href="#sports">SPORTS</a><a href="/events.html">LIVE</a><a href="/dashboard.html">MY ELITE</a>
+<a href="#sports">SPORTS</a><a href="/hall-of-fame.html">HALL OF FAME</a><a href="/events.html">LIVE</a><a href="/dashboard.html">MY ELITE</a>
 </div></div>
 
 <main>
@@ -34,6 +34,7 @@
       <a class="btn" href="/register.html">Create Elite Identity</a>
       <a class="btn secondary" href="/login.html">Enter the Hub</a>
       <a class="btn secondary" href="#sports">Explore Sports</a>
+      <a class="btn secondary" href="/link-baseball.html">Already play EBL? Connect your account</a>
     </div>
     <div class="statstrip">
       <div class="stat"><b>ONE</b><span>Elite identity</span></div>
@@ -55,25 +56,37 @@
  </div></div>
 </div>
 
-<section class="section network-section" id="elite-news">
-<div class="shell">
-<div class="section-head"><div><div class="eyebrow">ELITE NETWORK</div><h2>Today in Elite</h2></div><a class="network-link" href="/events.html">ALL EVENTS →</a></div>
-<div class="network-grid">
-<article class="lead-story"><div class="story-kicker live-pulse">LIVE & UPCOMING</div><h3>The Elite universe starts with Racing.</h3><p>Build your Elite identity, enter Racing, and carry your career history across the entire sports universe.</p><button class="btn primary sport-enter" data-sport="racing">ENTER ELITE RACING</button></article>
-<div class="score-stack">
-<div class="score-card"><span class="score-state live">LIVE</span><div><b>Elite Baseball League</b><small>Gamecasts • Scores • Careers</small></div><span>→</span></div>
-<div class="score-card"><span class="score-state">NEXT</span><div><b>Elite Stock Car Racing</b><small>Race weekends • Standings • Garage</small></div><span>SOON</span></div>
-<div class="score-card"><span class="score-state">TOUR</span><div><b>Elite Golf League</b><small>Events • Rankings • Course fit</small></div><span>SOON</span></div>
-</div></div>
-<div class="headline-strip"><span>TOP STORIES</span><div>EBL opens the connected Elite sports universe</div><div>Career Passport preserves every athlete's history</div><div>More Elite sports worlds are in development</div></div>
-</div></section><section class="section" id="sports"><div class="shell">
+<section class="section network-section esn-room" id="elite-news">
+  <div class="shell">
+    <div class="section-head"><div><div class="eyebrow">ESL SPORTS NETWORK</div><h2>Across the Elite Universe</h2></div><a class="network-link" href="/network.html">OPEN THE NETWORK →</a></div>
+    <div class="esn-news-grid">
+      <article class="esn-feature" aria-live="polite">
+        <div class="esn-feature-meta"><span class="esn-kicker" id="esn-feature-type">THE INAUGURAL ERA</span><span id="esn-feature-date">ESL ORIGINAL</span></div>
+        <h3 id="esn-feature-headline">The first generation is writing the history of Elite Sports Leagues.</h3>
+        <p id="esn-feature-summary">Nine sports. Independent careers. One connected sports universe. The first real records, rivalries, and champions are still being written.</p>
+        <div class="esn-feature-bottom"><a href="/network.html" class="esn-text-link">See the latest coverage ↗</a><span>ELITE SPORTS NETWORK</span></div>
+      </article>
+      <aside class="esn-live-panel" aria-label="Verified community activity">
+        <div class="esn-side-head"><span class="esn-pulse"></span><strong>AROUND THE LEAGUES</strong><small>PUBLIC ACTIVITY</small></div>
+        <div id="esn-activity"><p class="esn-empty">Checking for the latest confirmed career moments…</p></div>
+        <a href="/network.html#activity" class="esn-view-more">FULL ACTIVITY DESK ↗</a>
+      </aside>
+    </div>
+    <div class="esn-quick-scores" aria-label="Recent confirmed final scores"><div class="esn-row-title"><b>FINAL SCOREBOARD</b><small>Verified league results</small></div><div id="esn-scores"><p class="esn-empty">No confirmed final scores have been syndicated yet.</p></div></div>
+    <div class="esn-lower-grid">
+      <div class="esn-news-wire"><div class="esn-row-title"><b>HEADLINE WIRE</b><small>Published ESL updates</small></div><div id="esn-news-list"><p class="esn-empty">The news desk is opening.</p></div></div>
+      <div class="esn-on-deck"><div class="esn-row-title"><b>SPORTS DESK</b><small>Development & competition</small></div><div id="esn-sports-status"><p class="esn-empty">Checking league status…</p></div></div>
+    </div>
+  </div>
+</section>
+<section class="section" id="sports"><div class="shell">
   <div class="section-head"><div><div class="eyebrow">Choose your arena</div><h2>Elite Sports</h2></div><p>Every sport keeps its own identity.</p></div>
   <div class="grid">
-    <button class="card sport-card world-card world-baseball" type="button" onclick="location.href='/dashboard.html'">
-      <img class="league-logo" src="/logo-baseball.svg" alt="Elite Baseball League logo"><h3>Elite Baseball League</h3><p>Build a career, join a franchise, chase championships.</p><span class="tag">INTEGRATION NEXT</span>
-      <div class="sport-footer"><span>EBL connection coming next</span><span class="arrow">→</span></div>
+    <button class="card sport-card world-card world-baseball" type="button" onclick="location.href='https://elite-baseball.com'">
+      <img class="league-logo" src="/logo-baseball.svg" alt="Elite Baseball League logo"><h3>Elite Baseball League</h3><p>Build a career, join a franchise, chase championships.</p><span class="tag live">LIVE SPORT</span>
+      <div class="sport-footer"><span>Visit EBL</span><span class="arrow">→</span></div>
     </button>
-    <button class="card sport-card world-card world-racing sport-enter" data-sport="racing" type="button"><img class="league-logo" src="/logo-racing.svg" alt="Elite Stock Car Racing logo"><h3>Elite Stock Car Racing</h3><p>Driver careers, garages, race weekends and championships.</p><span class="tag live">ACTIVE</span><div class="sport-footer"><span>Enter Racing</span><span class="arrow">→</span></div></button>
+    <button class="card sport-card world-card world-racing sport-enter" data-sport="racing" type="button"><img class="league-logo" src="/logo-racing.svg" alt="Elite Stock Car Racing logo"><h3>Elite Stock Car Racing</h3><p>Driver careers, garages, race weekends and championships.</p><span class="tag">ALPHA</span><div class="sport-footer"><span>Enter Racing</span><span class="arrow">→</span></div></button>
     <div class="card sport-card world-card world-golf"><img class="league-logo" src="/logo-golf.svg" alt="Elite Golf League logo"><h3>Elite Golf League</h3><p>Tours, rankings, course fit and career-defining majors.</p><span class="tag">IN DEVELOPMENT</span><div class="sport-footer"><span>Tour preview</span><span class="arrow">→</span></div></div>
     <div class="card sport-card world-card world-basketball"><img class="league-logo" src="/logo-basketball.svg" alt="Elite Basketball League logo"><h3>Elite Basketball</h3><p>Player careers, teams, seasons, awards and rivalries.</p><span class="tag">IN DEVELOPMENT</span></div>
     <div class="card sport-card world-card world-football"><img class="league-logo" src="/logo-football.svg" alt="Elite Football League logo"><h3>Elite Football</h3><p>Build a football legacy from rookie season onward.</p><span class="tag">IN DEVELOPMENT</span></div>
@@ -84,6 +97,10 @@
   </div>
 </div></section>
 
+<section class="section" id="hall-of-fame"><div class="shell">
+  <div class="esn-hof-block"><div><span class="eyebrow">A PERMANENT RECORD OF GREATNESS</span><h2>The Elite Hall of Fame</h2><p>Every sport has its own Hall of Fame. Names enter history only when real careers earn induction. The books begin with the first generation.</p><a class="btn" href="/hall-of-fame.html">Explore the Hall of Fame ↗</a></div>
+  <div class="esn-hof-panel"><div class="esn-hof-icon">★</div><b>THE FIRST CLASS</b><span id="esn-hof-count">Awaiting the first official inductees</span><small>NO FABRICATED LEGENDS. EVERY HONOR EARNED.</small></div></div>
+</div></section>
 <section class="section section-rail" id="legacy"><div class="shell two-col">
   <div class="card legacy-banner">
     <div class="eyebrow">Career Passport</div><h2>Your entire sporting life, one profile.</h2>
@@ -110,19 +127,16 @@
 
 <footer class="footer"><div class="shell">© 2026 Elite Sports Leagues • Build your legacy.</div></footer>
 <script>
-// Restore an existing Elite session when a signed-in user returns to the public home page.
-// A network/server hiccup must never sign the user out; only a confirmed unauthenticated response does.
-(async function restoreEliteSession(){
-  try{
-    const r=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});
-    if(!r.ok) return;
-    const data=await r.json();
-    if(data && data.user){
-      location.replace('/dashboard.html');
-    }
-  }catch(err){
-    console.debug('Elite session check unavailable',err);
-  }
+// The public Sports Network remains available to signed-in people.
+// Keep their identity visible rather than redirecting them away from headlines.
+(async function updateEliteNav(){
+  try{const r=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});
+    if(!r.ok)return;const d=await r.json();if(!d.user)return;
+    const login=document.querySelector('.navlinks a[href="/login.html"]');
+    if(login){login.href='/dashboard.html';login.textContent='My Elite';}
+    const register=document.querySelector('.navlinks a[href="/register.html"]');
+    if(register){register.href='/dashboard.html';register.textContent='Dashboard';}
+  }catch(e){console.debug('Nav session unavailable',e);}
 })();
 
 async function eliteEnterSport(slug){
@@ -141,6 +155,25 @@ async function eliteEnterSport(slug){
   }
 }
 document.addEventListener('click',e=>{const b=e.target.closest('.sport-enter');if(b) eliteEnterSport(b.dataset.sport);});
+</script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const date=v=>{if(!v)return '';const d=new Date(String(v).replace(' ','T')+'Z');return Number.isNaN(d.getTime())?'':d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});};
+async function load(){try{
+const res=await fetch('/api/network/home',{cache:'no-store'});
+if(!res.ok)throw Error('Network feed is not ready');const d=await res.json();
+const news=Array.isArray(d.news)?d.news:[],activities=Array.isArray(d.activity)?d.activity:[],sports=Array.isArray(d.sports)?d.sports:[],inductees=Array.isArray(d.inductees)?d.inductees:[],scores=Array.isArray(d.scoreboard)?d.scoreboard:[];
+$('esn-scores').innerHTML=scores.length?scores.slice(0,8).map(g=>{const x=g.details||{};return `<article class="esn-score"><small>FINAL</small><strong>${safe(x.away)} <span>${safe(x.away_runs)}</span></strong><strong>${safe(x.home)} <span>${safe(x.home_runs)}</span></strong></article>`}).join(''):'<p class="esn-empty">Official final scores will appear here as games are completed and reported.</p>';
+if(news.length){const top=news[0];$('esn-feature-type').textContent=top.sport_name||'NETWORK BULLETIN';$('esn-feature-headline').textContent=top.headline;$('esn-feature-summary').textContent=top.summary;$('esn-feature-date').textContent=date(top.published_at)||'PUBLISHED REPORT';}
+$('esn-activity').innerHTML=activities.length?activities.slice(0,4).map(a=>`<article class="esn-moment"><strong>${safe(a.icon||'🏅')} ${safe(a.title)}</strong><p>${safe(a.description||'')}</p><a href="/profile.html?u=${encodeURIComponent(a.username)}">${safe(a.display_name||a.username)} ↗</a></article>`).join(''):'<p class="esn-empty">The first verified player moments will appear here as leagues publish them.</p>';
+$('esn-news-list').innerHTML=news.length?news.slice(0,5).map(n=>`<article class="esn-news-item"><span class="esn-category">${safe(n.sport_name||'ESL NETWORK')}</span><div><h4>${safe(n.headline)}</h4><p>${safe(n.summary)}</p></div></article>`).join(''):'<p class="esn-empty">No verified network reports yet. The first headlines will be published as the leagues report real milestones.</p>';
+$('esn-sports-status').innerHTML=sports.length?sports.slice(0,6).map(s=>`<div class="esn-sport-entry"><span class="sport-indicator">${safe(s.icon)}</span><strong>${safe(s.name)}</strong><small>${safe(s.status||'DEVELOPMENT')}</small></div>`).join(''):'<p class="esn-empty">League statuses will appear here once Core is connected.</p>';
+$('esn-hof-count').textContent=inductees.length?`${inductees.length} recorded induction${inductees.length===1?'':'s'} — explore the classes`:'Awaiting the first official inductees';
+}catch(e){$('esn-activity').innerHTML='<p class="esn-empty">Public activity is currently unavailable. No unverified results will be shown.</p>';$('esn-news-list').innerHTML='<p class="esn-empty">Verified news is temporarily unavailable.</p>';$('esn-scores').innerHTML='<p class="esn-empty">Scoreboard temporarily unavailable.</p>';$('esn-sports-status').innerHTML='<p class="esn-empty">League status unavailable.</p>';}
+}load();
+})();
 </script>
 </body>
 </html>

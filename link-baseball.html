@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Link Baseball — Elite Sports Leagues</title><style>
+body{margin:0;background:#071321;color:#fff;font:16px system-ui,-apple-system,sans-serif}main{max-width:560px;margin:7vh auto;padding:24px}h1{font-size:2.3rem}p{color:#b8c8d9;line-height:1.55}button,.cta{display:block;width:100%;text-align:center;box-sizing:border-box;background:#d6293e;color:white;padding:15px;border:0;border-radius:8px;font-size:1rem;font-weight:800;cursor:pointer;text-decoration:none;margin-top:13px}button:disabled{opacity:.5}a{color:#a9d9fb}#status{padding:16px 0;min-height:40px}code{color:#fff}</style></head>
+<body><main><p>ELITE SPORTS LEAGUES / ACCOUNT CONNECTION</p><h1>One identity. Your baseball career.</h1><p>Keep the EBL players and customization you already have. Connecting makes your verified baseball identity available at the Elite Sports hub without starting a new player.</p><a class="cta" href="https://elite-baseball.com/connect-elite.html">1 · Verify at EBL</a><button id="finish" disabled>2 · Finish connection</button><div id="status" role="status" aria-live="polite">Checking your Elite Sports sign-in…</div><p>If you aren't signed in to Elite Sports, <a href="/login.html" target="_blank" rel="noopener">sign in in another tab</a> and return here. Your proof stays in this tab only.</p><p><a href="/">Return to Elite Sports</a></p></main>
+<script>
+const status=document.querySelector('#status'),button=document.querySelector('#finish');
+const hash=new URLSearchParams(window.location.hash.slice(1));const proof=hash.get('proof');
+if(proof){sessionStorage.setItem('esl_ebl_link_proof',proof);history.replaceState(null,'',window.location.pathname);}
+const stored=sessionStorage.getItem('esl_ebl_link_proof');
+function cookie(name){const part=document.cookie.split('; ').find(x=>x.startsWith(name+'='));return part?decodeURIComponent(part.slice(name.length+1)):'';}
+async function readiness(){
+ try{const r=await fetch('/api/account/readiness',{credentials:'same-origin',cache:'no-store'}),d=await r.json();
+ if(!d.user){status.textContent='Sign in to Elite Sports in another tab, then return and refresh this page.';return;}
+ if(!d.sport_entry_ready){status.textContent='Verify your Elite Sports email and accept the current terms before connecting.';return;}
+ if(!stored){status.textContent='Signed in. Choose Verify at EBL to return with an account ownership proof.';return;}
+ status.textContent='Both accounts are ready. You are linking to Elite Sports user '+String(d.user.username||d.user.display_name||'')+'.';button.textContent='2 · Connect as '+String(d.user.username||d.user.display_name||'Elite user');button.disabled=false;
+ }catch(e){status.textContent='Unable to check your Elite Sports account right now.';}
+}
+button.onclick=async()=>{
+ if(!stored)return;
+ button.disabled=true;status.textContent='Verifying ownership…';
+ try{const r=await fetch('/api/integrations/baseball/link',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-CSRF-Token':cookie('elite_csrf')},body:JSON.stringify({proof:stored})});
+ const d=await r.json();if(!r.ok){status.textContent=d.error==='EXPIRED_OR_INVALID_LINK_PROOF'?'Proof expired. Return to EBL and generate a fresh link.':d.error==='EBL_ACCOUNT_ALREADY_CLAIMED'?'This EBL account has already been connected to another Elite identity.':d.error==='ALREADY_LINKED_TO_DIFFERENT_EBL_ACCOUNT'?'This Elite identity already has a different baseball account.':'Connection failed ('+String(d.error||'unknown error')+').';button.disabled=false;return;}
+ sessionStorage.removeItem('esl_ebl_link_proof');status.textContent='Connected! Your EBL identity is now verified: '+d.link.external_username+'.';
+ }catch(e){status.textContent='Connection failed. Please try again.';button.disabled=false;}
+};readiness();
+</script></body></html>

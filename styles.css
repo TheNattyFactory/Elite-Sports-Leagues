@@ -431,3 +431,26 @@ button.card{color:var(--text);text-align:left;-webkit-appearance:none;appearance
   .score-card>div b{font-size:15px!important}
   .sport-card{padding:16px!important}
 }
+
+/* ESL Sports Network Phase 1 — 2026-10-08 */
+.esn-room{padding-top:38px}.esn-news-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:14px}
+.esn-feature{min-height:330px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;border:1px solid #3c4e65;border-radius:17px;padding:clamp(20px,4vw,36px);background:radial-gradient(ellipse at 75% 18%,rgba(251,198,94,.18),transparent 36%),linear-gradient(138deg,#162942 0%,#0d192c 48%,#090e16 100%)}
+.esn-feature:before{content:"ESL";position:absolute;top:18px;right:-15px;font-size:clamp(85px,16vw,185px);font-weight:1000;letter-spacing:-.11em;color:rgba(255,255,255,.035);pointer-events:none}
+.esn-feature-meta{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:10px;font-weight:850;letter-spacing:.13em;color:#aabdd3}.esn-kicker{display:inline-block;background:#dfaa49;color:#091525;padding:6px 9px;border-radius:4px;font-weight:950}
+.esn-feature h3{position:relative;max-width:780px;font-size:clamp(27px,4.2vw,44px);line-height:1.1;letter-spacing:-.035em;margin:26px 0 12px}.esn-feature p{position:relative;max-width:680px;color:#bbc9dd;line-height:1.7;margin:0 0 20px}
+.esn-feature-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #ffffff26;padding-top:15px;color:#8fa4bd;font-size:10px;letter-spacing:.09em;font-weight:850}
+.esn-text-link{color:#f5cf7b;font-weight:900;font-size:13px;letter-spacing:0}.esn-live-panel,.esn-news-wire,.esn-on-deck{border:1px solid #2b3d54;background:#0d1725;border-radius:17px;padding:20px}
+.esn-side-head,.esn-row-title{display:flex;align-items:center;gap:10px;border-bottom:1px solid #27374c;padding-bottom:14px;letter-spacing:.1em;font-size:11px}.esn-side-head small,.esn-row-title small{font-size:10px;margin-left:auto;color:#91a7c0;font-weight:750}.esn-pulse{width:8px;height:8px;border-radius:100%;background:#e6b759;box-shadow:0 0 0 4px #e6b75920}
+.esn-moment{border-bottom:1px solid #1f2d40;padding:15px 0}.esn-moment:last-child{border:0}.esn-moment strong{display:block;font-size:14px;line-height:1.4}.esn-moment p{color:#9bacc2;font-size:12px;margin:5px 0}.esn-moment a,.esn-moment time{font-size:11px;color:#d6ba75}.esn-view-more{display:block;font-size:11px;letter-spacing:.08em;color:#e9bf68;font-weight:800;margin-top:14px}.esn-empty{font-size:13px;line-height:1.7;color:#98a9c2;padding:12px 0}
+.esn-lower-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:14px}.esn-news-item{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid #202e40}.esn-news-item:last-child{border-bottom:0}.esn-news-item .esn-category{font-size:10px;color:#edbf68;font-weight:850;letter-spacing:.08em}.esn-news-item h4{margin:0 0 6px;font-size:15px;line-height:1.45}.esn-news-item p{color:#9daec2;font-size:12px;margin:0}.esn-sport-entry{padding:11px 0;display:flex;gap:10px;align-items:center;justify-content:space-between;border-bottom:1px solid #202e40;font-size:13px}.esn-sport-entry:last-child{border:0}.esn-sport-entry .sport-indicator{font-size:19px}.esn-sport-entry strong{flex:1}.esn-sport-entry small{color:#e0ba72;font-weight:750;font-size:10px;letter-spacing:.08em}
+.esn-hof-block{display:grid;grid-template-columns:1.3fr .7fr;gap:25px;align-items:center;padding:34px;border:1px solid #6b522d;border-radius:18px;background:radial-gradient(circle at right,rgba(255,193,68,.12),transparent 45%),#131924}.esn-hof-block h2{font-size:clamp(28px,4vw,39px);margin:12px 0}.esn-hof-block p{color:#b9c7d5;line-height:1.7;max-width:640px}.esn-hof-panel{min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;background:#12100d;border:1px solid #7b5e2e;border-radius:16px;padding:20px}.esn-hof-icon{font-size:50px;color:#f7d07a}.esn-hof-panel b{font-size:18px;letter-spacing:.12em}.esn-hof-panel span{color:#f7d07a}.esn-hof-panel small{font-size:10px;color:#a9a29a;letter-spacing:.08em}
+@media(max-width:850px){.esn-news-grid,.esn-lower-grid,.esn-hof-block{grid-template-columns:1fr}.esn-feature{min-height:300px}.esn-live-panel{min-height:210px}}@media(max-width:480px){.esn-feature-bottom span{display:none}.esn-news-item{grid-template-columns:1fr;gap:4px}.esn-hof-block{padding:20px}.esn-row-title small{display:none}}
+
+/* ESL Network Phase 2 — verified final scores */
+.esn-quick-scores{margin:18px 0;border:1px solid #273d54;border-radius:16px;padding:15px 20px;background:#0b1521}
+#esn-scores{display:flex;gap:10px;overflow-x:auto;padding-top:13px;scroll-snap-type:x mandatory}
+.esn-score{scroll-snap-align:start;flex:0 0 180px;display:grid;gap:7px;padding:12px;border-radius:11px;background:#111f30;border:1px solid #29415e}
+.esn-score small{font-weight:900;font-size:10px;color:#f4bf55;letter-spacing:.12em}
+.esn-score strong{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#e9edf4}
+.esn-score strong span{font-size:17px;color:#f4cf70;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.esn-quick-scores{padding:13px}.esn-score{flex-basis:155px}}

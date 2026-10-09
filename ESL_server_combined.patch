@@ -1,0 +1,185 @@
+--- a/server.py
++++ b/server.py
+@@ -12,8 +12,10 @@
+ import base64
+ import os
+ import urllib.request
+ import urllib.parse
++import esl_network_bridge
++import esl_ebl_account_link
+ from email.utils import formatdate
+ 
+ ROOT = Path(__file__).resolve().parent
+ DB_PATH = Path(os.environ.get("ELITE_DB_PATH", "/data/elite_core.db" if os.environ.get("ELITE_ENV", "development").lower() == "production" else str(ROOT / "elite_core.db")))
+@@ -1078,8 +1080,10 @@
+         self.wfile.write(data)
+ 
+     def do_POST(self):
+         p = urlparse(self.path).path
++        if p == "/api/network/ingest":
++            return esl_network_bridge.ingest(self, conn)
+         if not validate_csrf(self,p):
+             return self.send_json({"error":"CSRF_FAILED"},403)
+         body = self.read_json()
+ 
+@@ -1249,27 +1253,16 @@
+                 self.auth_cookie_headers(token)
+             )
+ 
+         if p == "/api/integrations/baseball/link":
+-            user = self.require_user()
+-            if not user:
+-                return
+-
+-            external_user_id = str(body.get("external_user_id") or "").strip()
+-            external_username = (body.get("external_username") or "").strip() or None
+-            role = (body.get("role") or "PLAYER").strip().upper()
+-
+-            if not external_user_id:
+-                return self.send_json({"error":"MISSING_EXTERNAL_USER_ID"},400)
+-            if role not in {"PLAYER","COACH","COMMISSIONER"}:
+-                return self.send_json({"error":"INVALID_ROLE"},400)
+-
+-            link, err = link_sport_account(
+-                user["id"], "baseball", external_user_id, external_username, role
+-            )
++            # EBL user IDs are NEVER accepted from the browser without an EBL-signed proof.
++            user = self.require_verified_user()
++            if not user:return
++            proof = body.get("proof")
++            link,err=esl_ebl_account_link.link(conn,user["id"],proof)
+             if err:
+-                return self.send_json({"error":err},409)
+-
++                code=503 if err=="LINK_NOT_CONFIGURED" else 409 if "ALREADY" in err or "CLAIMED" in err else 401
++                return self.send_json({"error":err},code)
+             return self.send_json({"ok":True,"link":link})
+ 
+         if p == "/api/community/friend-request":
+             user = self.require_user()
+@@ -1403,38 +1396,12 @@
+ 
+             return self.send_json({"ok":True, **data})
+ 
+         if p == "/api/gateway/link-external":
+-            ticket=(body.get("link_ticket") or "").strip()
+-            sport_slug=(body.get("sport") or "").strip().lower()
+-            external_user_id=str(body.get("external_user_id") or "").strip()
+-            external_username=(body.get("external_username") or "").strip() or None
+-            sport_role=(body.get("sport_role") or "PLAYER").strip().upper()
+-
+-            if not ticket or not sport_slug or not external_user_id:
+-                return self.send_json({"error":"MISSING_LINK_DATA"},400)
+-            if sport_role not in {"PLAYER","COACH","COMMISSIONER"}:
+-                return self.send_json({"error":"INVALID_SPORT_ROLE"},400)
+-
+-            payload,err=verify_external_link_ticket(ticket)
+-            if err:
+-                return self.send_json({"error":err},401)
+-
+-            sport=one("SELECT id,slug FROM sports WHERE slug=?",(sport_slug,))
+-            if not sport or int(sport["id"])!=int(payload["sid"]):
+-                return self.send_json({"error":"SPORT_MISMATCH"},401)
+-
+-            link,err=link_sport_account(
+-                int(payload["uid"]),
+-                sport_slug,
+-                external_user_id,
+-                external_username,
+-                sport_role
+-            )
+-            if err:
+-                return self.send_json({"error":err},409 if err=="EXTERNAL_ACCOUNT_ALREADY_LINKED" else 400)
+-
+-            return self.send_json({"ok":True,"external_account":link})
++            # Deprecated: gateway tickets prove ESL login, not possession of an account
++            # at a sport. Require sport-owned proof instead of trusting an arbitrary ID.
++            return self.send_json({"error":"SPORT_OWNERSHIP_PROOF_REQUIRED",
++                                   "connect_url":"/link-baseball.html"},410)
+ 
+         if p == "/api/auth/logout":
+             token = self.cookies().get(SESSION_COOKIE)
+             delete_session(token)
+@@ -1646,8 +1613,72 @@
+               ORDER BY af.occurred_at DESC,af.id DESC
+               LIMIT 100
+             """,(user["id"],))
+             return self.send_json({"activity":data})
++
++        # ESL Sports Network — public read-only endpoints.
++        # Never manufacture results: only published news, public activity and
++        # explicitly inducted Hall-of-Fame honors can appear here.
++        if p == "/api/network/status":
++            # No credentials, personal data or invented online status are exposed.
++            return self.send_json(esl_network_bridge.receipt_status(conn))
++
++        if p == "/api/network/home":
++            sports = rows("""SELECT slug,name,short_name,status,icon,sort_order
++                FROM sports WHERE is_public=1 ORDER BY sort_order,name""")
++            # These three headlines belong to the opt-in ELITE_SEED_DEMO fixtures.
++            # They are not confirmed sporting results and must not reach the public feed.
++            news = rows("""SELECT n.id,n.headline,n.summary,n.published_at,n.is_featured,
++                       s.slug sport_slug,s.name sport_name,s.icon
++                FROM hub_news n LEFT JOIN sports s ON s.id=n.sport_id
++                WHERE n.headline NOT IN (
++                  'Atlanta clinches division title',
++                  'Rookie earns first career victory',
++                  'Basketball league foundation enters planning phase'
++                )
++                ORDER BY n.is_featured DESC,n.priority DESC,n.published_at DESC,n.id DESC
++                LIMIT 12""")
++            activity = rows("""SELECT af.title,af.description,af.occurred_at,
++                    u.username,u.display_name,s.slug sport_slug,s.name sport_name,s.icon
++                FROM activity_feed af JOIN users u ON u.id=af.user_id
++                LEFT JOIN sports s ON s.id=af.sport_id
++                LEFT JOIN profile_settings ps ON ps.user_id=u.id
++                WHERE af.visibility='PUBLIC' AND u.status='ACTIVE'
++                  AND COALESCE(ps.public_profile,1)=1
++                  AND COALESCE(ps.show_activity,1)=1
++                  AND COALESCE(af.external_ref,'') NOT LIKE 'demo-%'
++                ORDER BY af.occurred_at DESC,af.id DESC LIMIT 12""")
++            inductees = rows("""SELECT h.title,h.season_label,h.awarded_at,
++                    u.username,u.display_name,s.slug sport_slug,s.name sport_name,s.icon
++                FROM honors h JOIN users u ON u.id=h.user_id
++                JOIN sports s ON s.id=h.sport_id
++                LEFT JOIN profile_settings ps ON ps.user_id=u.id
++                WHERE UPPER(h.honor_type)='HALL_OF_FAME'
++                  AND u.status='ACTIVE' AND s.is_public=1
++                  AND COALESCE(ps.public_profile,1)=1
++                ORDER BY h.awarded_at DESC,h.id DESC LIMIT 6""")
++            # Merge immutable, authenticated league reports with editorial news.
++            # Report type and scoreboard are separate: EBL remains the score authority.
++            reports = esl_network_bridge.recent_reports(conn)
++            for report in reports:
++                report["is_featured"] = 0
++            news = sorted(news + reports, key=lambda n: (n["published_at"], n.get("is_featured",0)), reverse=True)[:24]
++            scoreboard = [r for r in reports if r["report_type"]=="GAME_FINAL"][:20]
++            return self.send_json({"sports":sports,"news":news,"activity":activity,
++                                   "inductees":inductees,"scoreboard":scoreboard})
++
++        if p == "/api/network/hall-of-fame":
++            sports = rows("""SELECT slug,name,icon,sort_order FROM sports
++                WHERE is_public=1 ORDER BY sort_order,name""")
++            inductees = rows("""SELECT h.title,h.season_label,h.event_label,h.awarded_at,
++                    u.username,u.display_name,s.slug sport_slug,s.name sport_name,s.icon
++                FROM honors h JOIN users u ON u.id=h.user_id
++                JOIN sports s ON s.id=h.sport_id
++                LEFT JOIN profile_settings ps ON ps.user_id=u.id
++                WHERE UPPER(h.honor_type)='HALL_OF_FAME' AND s.is_public=1
++                  AND u.status='ACTIVE' AND COALESCE(ps.public_profile,1)=1
++                ORDER BY h.awarded_at DESC,h.id DESC LIMIT 300""")
++            return self.send_json({"sports":sports,"inductees":inductees})
+ 
+         if p == "/api/activity/global":
+             data = rows("""
+               SELECT af.id,af.activity_type,af.title,af.description,af.occurred_at,
+@@ -1887,8 +1918,9 @@
+ if __name__ == "__main__":
+     init_db()
+     init_community_schema()
+     init_security_schema()
++    esl_network_bridge.init_schema(conn)
+     print(f"Elite Core running on http://localhost:{PORT}")
+     if os.environ.get("ELITE_SEED_DEMO","0") == "1":
+         print("Development demo account seeded.")
+     ThreadingHTTPServer((HOST,PORT),Handler).serve_forever()
